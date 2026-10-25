@@ -1,0 +1,319 @@
+﻿@model TaskManager.Models.HomeDashboardViewModel
+@{
+    ViewData["Title"] = "Trang chủ Dashboard";
+    int currentWorkspaceId = Model?.Workspaces?.FirstOrDefault(w => w.WorkspaceName == Model.CurrentWorkspaceName)?.WorkspaceID ?? 1;
+    DateTime today = DateTime.Now;
+
+    var overdueTasks = Model?.OverdueTasks ?? new List<TaskManager.Models.TaskItem>();
+    var todayTasks = Model?.TodayAnd24hTasks ?? new List<TaskManager.Models.TaskItem>();
+    var upcomingTasks = Model?.UpcomingAndOtherTasks ?? new List<TaskManager.Models.TaskItem>();
+
+    DateTime firstDay = new DateTime(today.Year, today.Month, 1);
+    int totalDaysInMonth = DateTime.DaysInMonth(today.Year, today.Month);
+    int startCol = ((int)firstDay.DayOfWeek == 0) ? 7 : (int)firstDay.DayOfWeek;
+}
+
+<main class="flex-1 p-6 space-y-6 overflow-y-auto">
+    <!-- KHỐI THÔNG BÁO THÀNH CÔNG / LỖI -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-xs font-medium flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span>✅</span>
+                <span>@TempData["SuccessMessage"]</span>
+            </div>
+            <button onclick="this.parentElement.remove()" class="text-emerald-600 hover:text-emerald-900 font-bold">✕</button>
+        </div>
+    }
+
+    <!-- THÔNG BÁO QUÁ HẠN CHÓT -->
+    @if ((Model?.OverdueCount ?? 0) > 0)
+    {
+        <div class="p-3 bg-rose-50 border border-rose-200 text-rose-800 rounded-xl text-xs flex items-center justify-between shadow-sm">
+            <div class="flex items-center gap-2">
+                <span class="text-base">⚠️</span>
+                <span><strong>Cảnh báo:</strong> Dự án này có <strong class="text-rose-600 font-bold">@Model.OverdueCount</strong> công việc đã quá hạn chót chưa hoàn thành!</span>
+            </div>
+            <button onclick="this.parentElement.remove()" class="px-2 py-1 text-[10px] font-bold text-slate-500 hover:bg-rose-100 rounded transition">ĐÓNG</button>
+        </div>
+    }
+
+    <!-- THANH TIÊU ĐỀ DASHBOARD -->
+    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div>
+            <h1 class="text-lg font-bold text-slate-800">Xin chào, @(Model?.CurrentUserName ?? "Bạn")! 👋</h1>
+            <p class="text-xs text-slate-500">Tổng quan công việc thuộc dự án <strong class="text-slate-700">@(Model?.CurrentWorkspaceName ?? "Hiện tại")</strong></p>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <!-- CHUYỂN ĐỔI CHẾ ĐỘ XEM -->
+            <div class="flex bg-slate-100 p-1 rounded-lg text-xs font-semibold">
+                <button id="btnTodo" onclick="switchView('todo')" class="px-3 py-1.5 rounded-md bg-white text-slate-800 shadow-sm transition">To-Do List</button>
+                <button id="btnCalendar" onclick="switchView('calendar')" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-800 transition">Calendar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4 THẺ THỐNG KÊ (CARDS) -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">TỔNG VIỆC GIAO</span>
+            <div class="text-2xl font-bold text-slate-800 mt-1">@(Model?.TotalAssigned ?? 0)</div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">ĐANG THỰC HIỆN</span>
+            <div class="text-2xl font-bold text-blue-600 mt-1">@(Model?.InProgressCount ?? 0)</div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">SẮP ĐẾN HẠN (&lt;24H)</span>
+            <div class="text-2xl font-bold text-amber-500 mt-1">@(Model?.DueWithin24hCount ?? 0)</div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">QUÁ HẠN CHÓT</span>
+            <div class="text-2xl font-bold @((Model?.OverdueCount ?? 0) > 0 ? "text-rose-600" : "text-slate-800") mt-1">@(Model?.OverdueCount ?? 0)</div>
+        </div>
+    </div>
+
+    <!-- BỐ TRÍ 2 CỘT CHÍNH VÀ PHỤ -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- CỘT TRÁI: DANH SÁCH TASK (2/3 CHIỀU RỘNG) -->
+        <div class="lg:col-span-2 space-y-4" id="viewContainer">
+
+            <!-- NHÓM 1: CÔNG VIỆC QUÁ HẠN -->
+            @if (overdueTasks.Any())
+            {
+                <div class="bg-white rounded-xl border border-rose-200 shadow-sm overflow-hidden">
+                    <div class="px-4 py-3 bg-rose-50/50 border-b border-rose-100 flex justify-between items-center">
+                        <span class="text-xs font-bold text-rose-700 uppercase tracking-wider">🔥 Bị quá hạn (@overdueTasks.Count)</span>
+                    </div>
+                    <div class="divide-y divide-slate-100">
+                        @foreach (var task in overdueTasks)
+                        {
+                            <div class="p-3.5 hover:bg-slate-50/80 transition flex items-center justify-between gap-3">
+                                <div class="space-y-1">
+                                    <div class="text-xs font-bold text-slate-800">@task.Title</div>
+                                    <div class="text-[11px] text-slate-400 flex items-center gap-2">
+                                        <span>📅 @(task.Deadline.ToString("dd/MM/yyyy HH:mm"))</span>
+                                        <span class="px-1.5 py-0.2 bg-rose-100 text-rose-700 rounded text-[10px] font-semibold">@task.Priority</span>
+                                    </div>
+                                </div>
+                                <span class="px-2.5 py-1 bg-rose-100 text-rose-700 rounded-full text-[10px] font-bold shrink-0">@task.Status</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- NHÓM 2: HÔM NAY VÀ 24H SẮP TỚI -->
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="px-4 py-3 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">📌 Cần xử lý hôm nay & 24h tới (@todayTasks.Count)</span>
+                </div>
+                <div class="divide-y divide-slate-100">
+                    @if (todayTasks.Any())
+                    {
+                        foreach (var task in todayTasks)
+                        {
+                            <div class="p-3.5 hover:bg-slate-50 transition flex items-center justify-between gap-3">
+                                <div class="space-y-1">
+                                    <div class="text-xs font-bold text-slate-800">@task.Title</div>
+                                    <div class="text-[11px] text-slate-400 flex items-center gap-2">
+                                        <span>📅 @(task.Deadline.ToString("dd/MM/yyyy HH:mm"))</span>
+                                        <span class="px-1.5 py-0.2 bg-slate-100 text-slate-600 rounded text-[10px] font-semibold">@task.Priority</span>
+                                    </div>
+                                </div>
+                                <span class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-full text-[10px] font-bold shrink-0">@task.Status</span>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="p-6 text-center text-xs text-slate-400">Không có công việc nào cần xử lý trong 24h tới.</div>
+                    }
+                </div>
+            </div>
+
+            <!-- NHÓM 3: SẮP TỚI & KHÁC -->
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="px-4 py-3 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">📅 Công việc sắp tới (@upcomingTasks.Count)</span>
+                </div>
+                <div class="divide-y divide-slate-100">
+                    @if (upcomingTasks.Any())
+                    {
+                        foreach (var task in upcomingTasks)
+                        {
+                            <div class="p-3.5 hover:bg-slate-50 transition flex items-center justify-between gap-3">
+                                <div class="space-y-1">
+                                    <div class="text-xs font-bold text-slate-800">@task.Title</div>
+                                    <div class="text-[11px] text-slate-400 flex items-center gap-2">
+                                        <span>📅 @(task.Deadline.ToString("dd/MM/yyyy HH:mm"))</span>
+                                        <span class="px-1.5 py-0.2 bg-slate-100 text-slate-600 rounded text-[10px] font-semibold">@task.Priority</span>
+                                    </div>
+                                </div>
+                                <span class="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full text-[10px] font-bold shrink-0">@task.Status</span>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="p-6 text-center text-xs text-slate-400">Danh sách công việc sắp tới rỗng.</div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- CỘT PHẢI: MINI CALENDAR VÀ LOGS (1/3 CHIỀU RỘNG) -->
+        <div class="space-y-6">
+
+            <!-- MINI CALENDAR ĐỘNG TỪ DATABASE -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                <div class="flex justify-between items-center">
+                    <span class="text-xs font-bold text-slate-800">Tháng @today.ToString("MM, yyyy")</span>
+                    <div class="flex gap-1">
+                        <button class="p-1 hover:bg-slate-100 rounded text-slate-600 transition">‹</button>
+                        <button class="p-1 hover:bg-slate-100 rounded text-slate-600 transition">›</button>
+                    </div>
+                </div>
+
+                <!-- Các thứ trong tuần -->
+                <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-slate-400">
+                    <div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div><div>CN</div>
+                </div>
+
+                <!-- Lưới ngày tính toán động -->
+                <div class="grid grid-cols-7 gap-1 text-center text-xs font-medium">
+                    @for (int i = 1; i < startCol; i++)
+                    {
+                        <div class="py-1.5 text-slate-200"></div>
+                    }
+
+                    @for (int day = 1; day <= totalDaysInMonth; day++)
+                    {
+                        DateTime checkDate = new DateTime(today.Year, today.Month, day);
+                        bool isToday = (day == today.Day);
+
+                        bool hasOverdue = overdueTasks.Any(t => t.Deadline.Date == checkDate.Date);
+                        bool hasUpcoming = upcomingTasks.Any(t => t.Deadline.Date == checkDate.Date) || todayTasks.Any(t => t.Deadline.Date == checkDate.Date);
+
+                        <div class="py-1.5 relative rounded-lg @(isToday ? "bg-blue-600 text-white font-bold shadow-sm" : "hover:bg-slate-100 text-slate-700")">
+                            @day
+                            @if (isToday)
+                            {
+                                <span class="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-amber-300 rounded-full"></span>
+                            }
+                            else if (hasOverdue)
+                            {
+                                <span class="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-rose-500 rounded-full"></span>
+                            }
+                            else if (hasUpcoming)
+                            {
+                                <span class="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-blue-500 rounded-full"></span>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <!-- Ô chú thích màu sắc -->
+                <div class="pt-3 border-t border-slate-100 flex justify-between text-[11px] text-slate-500">
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Quá hạn</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-400"></span> Hôm nay</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500"></span> Sắp tới</span>
+                </div>
+            </div>
+
+            <!-- HOẠT ĐỘNG GẦN ĐÂY / LOGS -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+                    <span class="text-xs font-bold text-slate-800">HOẠT ĐỘNG GẦN ĐÂY</span>
+                    <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">REALTIME</span>
+                </div>
+
+                <div class="space-y-2.5 text-xs">
+                    @if (Model?.RecentLogs != null && Model.RecentLogs.Any())
+                    {
+                        foreach (var log in Model.RecentLogs.Take(5))
+                        {
+                            <div class="flex items-start gap-2 text-slate-600">
+                                <span class="text-blue-500 mt-0.5">🔹</span>
+                                <div class="space-y-0.5">
+                                    <div>@log.Content</div>
+                                    <div class="text-[10px] text-slate-400">@(log.CreatedAt.ToString("HH:mm dd/MM"))</div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-slate-500 text-xs">🟢 Kết nối hệ thống thành công.</div>
+                        <div class="text-slate-500 text-xs">📁 Dự án: <strong>@(Model?.CurrentWorkspaceName)</strong></div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<!-- MODAL TẠO DỰ ÁN MỚI (MỞ TỪ NÚT "+ TẠO MỚI" TRÊN TOPBAR) -->
+<div id="createWorkspaceModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md border border-slate-200 overflow-hidden">
+        <div class="px-4 py-3 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Tạo Dự Án Mới</h3>
+            <button onclick="document.getElementById('createWorkspaceModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
+        </div>
+        <form asp-controller="Workspace" asp-action="Create" method="post" class="p-4 space-y-3">
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Tên dự án <span class="text-rose-500">*</span></label>
+                <input type="text" name="workspaceName" required placeholder="Nhập tên dự án mới..."
+                       class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:bg-white focus:border-blue-500 transition" />
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Mô tả dự án</label>
+                <textarea name="description" rows="3" placeholder="Nhập mô tả cho dự án..."
+                          class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:bg-white focus:border-blue-500 transition"></textarea>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
+                <button type="button" onclick="document.getElementById('createWorkspaceModal').classList.add('hidden')"
+                        class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-xs font-semibold transition">
+                    Hủy
+                </button>
+                <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-sm transition">Tạo dự án</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const activeWorkspaceId = @currentWorkspaceId;
+
+        function switchView(mode) {
+            const btnTodo = document.getElementById('btnTodo');
+            const btnCalendar = document.getElementById('btnCalendar');
+
+            if (mode === 'todo') {
+                btnTodo.className = 'px-3 py-1.5 rounded-md bg-white text-slate-800 shadow-sm transition';
+                btnCalendar.className = 'px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-800 transition';
+            } else {
+                btnCalendar.className = 'px-3 py-1.5 rounded-md bg-white text-slate-800 shadow-sm transition';
+                btnTodo.className = 'px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-800 transition';
+            }
+
+            fetch(`/Workspace/GetViewModePartial?workspaceId=${activeWorkspaceId}&mode=${mode}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.text();
+                })
+                .then(html => {
+                    document.getElementById('viewContainer').innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Lỗi khi tải dữ liệu AJAX:', error);
+                });
+        }
+    </script>
+}

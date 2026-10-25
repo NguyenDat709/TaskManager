@@ -6,6 +6,8 @@ using TaskManager.Models;
 
 namespace TaskManager.Controllers
 {
+    [Route("Auth")]
+    [Route("")]
     public class AuthController : Controller
     {
         private readonly AppDbContext _db;
@@ -16,6 +18,8 @@ namespace TaskManager.Controllers
         }
 
         [HttpGet]
+        [Route("")]
+        [Route("Login")]
         public IActionResult Login(string mode = "login", string? registered = null)
         {
             var vm = new AuthViewModel
@@ -27,6 +31,7 @@ namespace TaskManager.Controllers
         }
 
         [HttpPost]
+        [Route("Login")]
         public IActionResult Login(AuthViewModel model)
         {
             model.ActiveTab = "login";
@@ -48,7 +53,7 @@ namespace TaskManager.Controllers
                     return View(model);
                 }
 
-                // Kiểm tra mật khẩu (Hỗ trợ cả dữ liệu seed mẫu hoặc mật khẩu vừa đăng ký)
+                // Kiểm tra mật khẩu
                 if (!string.IsNullOrEmpty(user.PasswordHash) && user.PasswordHash != model.Password)
                 {
                     model.ErrorMessage = "Mật khẩu không chính xác!";
@@ -66,16 +71,20 @@ namespace TaskManager.Controllers
                 Response.Cookies.Append("TaskWeb_UserName", user.FullName, cookieOptions);
                 Response.Cookies.Append("TaskWeb_UserEmail", user.Email, cookieOptions);
 
-                return RedirectToAction("Index", "Home");
+                // Lưu vào Session để WorkspaceController đọc được
+                HttpContext.Session.SetInt32("UserID", user.UserID);
+                HttpContext.Session.SetString("UserName", user.FullName);
+                return RedirectToAction("Index", "Workspace");
             }
             catch (Exception ex)
             {
-                model.ErrorMessage = "Lỗi kết nối CSDL MySQL: " + ex.Message;
+                model.ErrorMessage = "Lỗi kết nối CSDL SQL Server: " + ex.Message;
                 return View(model);
             }
         }
 
         [HttpPost]
+        [Route("Register")]
         public IActionResult Register(AuthViewModel model)
         {
             model.ActiveTab = "register";
@@ -109,7 +118,7 @@ namespace TaskManager.Controllers
                     return View("Login", model);
                 }
 
-                // 1. Lưu User mới xuống MySQL
+                // 1. Lưu User mới xuống SQL Server
                 var newUser = new User
                 {
                     FullName = model.FullName.Trim(),
@@ -120,7 +129,7 @@ namespace TaskManager.Controllers
                 _db.Users.Add(newUser);
                 _db.SaveChanges();
 
-                // 2. Tự động gán User vào Dự án số 1 để có dữ liệu trải nghiệm ngay
+                // 2. Tự động gán User vào Dự án đầu tiên để trải nghiệm ngay
                 var defaultWs = _db.Workspaces.FirstOrDefault();
                 if (defaultWs != null)
                 {
@@ -143,11 +152,13 @@ namespace TaskManager.Controllers
         }
 
         [HttpGet]
+        [Route("Logout")]
         public IActionResult Logout()
         {
             Response.Cookies.Delete("TaskWeb_UserId");
             Response.Cookies.Delete("TaskWeb_UserName");
             Response.Cookies.Delete("TaskWeb_UserEmail");
+            HttpContext.Session.Clear();
             return RedirectToAction("Login");
         }
     }

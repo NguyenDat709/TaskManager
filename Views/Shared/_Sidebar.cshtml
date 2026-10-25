@@ -15,20 +15,28 @@
         </div>
 
         <nav class="p-4 space-y-1.5">
-            <a href="/" class="flex items-center gap-3 px-3.5 py-2.5 text-sm rounded-lg transition @(currentController == "Home" ? "font-semibold bg-blue-600 text-white shadow-sm" : "font-medium text-slate-400 hover:bg-slate-800 hover:text-white")">
+            <!-- Trang chủ Dashboard -->
+            <a href="/Workspace/Index?workspaceId=@currentWsId"
+               class="flex items-center gap-3 px-3.5 py-2.5 text-sm rounded-lg transition @(currentController == "Workspace" ? "font-semibold bg-blue-600 text-white shadow-sm" : "font-medium text-slate-400 hover:bg-slate-800 hover:text-white")">
                 Trang chủ
             </a>
-            <a href="/Kanban" class="flex items-center gap-3 px-3.5 py-2.5 text-sm rounded-lg transition @(currentController == "Kanban" ? "font-semibold bg-blue-600 text-white shadow-sm" : "font-medium text-slate-400 hover:bg-slate-800 hover:text-white")">
+
+            <!-- Kanban -->
+            <a href="/Kanban?workspaceId=@currentWsId"
+               class="flex items-center gap-3 px-3.5 py-2.5 text-sm rounded-lg transition @(currentController == "Kanban" ? "font-semibold bg-blue-600 text-white shadow-sm" : "font-medium text-slate-400 hover:bg-slate-800 hover:text-white")">
                 Kanban
             </a>
-            <a href="#checklist" class="flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition">
+
+            <!-- Task & Checklist -->
+            <a href="/Workspace/Index?workspaceId=@currentWsId&viewMode=todo"
+               class="flex items-center gap-3 px-3.5 py-2.5 text-sm rounded-lg transition @(currentController == "Task" ? "font-semibold bg-blue-600 text-white shadow-sm" : "font-medium text-slate-400 hover:bg-slate-800 hover:text-white")">
                 Task & Checklist
             </a>
-            <a href="/Gantt" class="flex items-center gap-3 px-3.5 py-2.5 text-sm rounded-lg transition @(currentController == "Gantt" ? "font-semibold bg-blue-600 text-white shadow-sm" : "font-medium text-slate-400 hover:bg-slate-800 hover:text-white")">
+
+            <!-- Gantt Chart -->
+            <a href="/Gantt?workspaceId=@currentWsId"
+               class="flex items-center gap-3 px-3.5 py-2.5 text-sm rounded-lg transition @(currentController == "Gantt" ? "font-semibold bg-blue-600 text-white shadow-sm" : "font-medium text-slate-400 hover:bg-slate-800 hover:text-white")">
                 Gantt
-            </a>
-            <a href="#analytics" class="flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition">
-                Báo cáo & Thống kê
             </a>
         </nav>
 

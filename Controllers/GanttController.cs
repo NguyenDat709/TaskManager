@@ -6,6 +6,7 @@ using TaskManager.Models;
 
 namespace TaskManager.Controllers
 {
+    [Route("Gantt")]
     public class GanttController : Controller
     {
         private readonly AppDbContext _db;
@@ -16,6 +17,8 @@ namespace TaskManager.Controllers
         }
 
         [HttpGet]
+        [Route("")]
+        [Route("Index")]
         public IActionResult Index(int workspaceId = 1, string? status = "All", string? search = null)
         {
             var now = DateTime.Now;
@@ -62,7 +65,7 @@ namespace TaskManager.Controllers
             }
             catch
             {
-                // Dữ liệu dự phòng nếu quên bật MySQL
+                // Dữ liệu dự phòng nếu chưa có dữ liệu trong SQL Server
                 rawTasks = new List<TaskItem>
                 {
                     new TaskItem { TaskID = 1, Title = "Task 1: Thiết kế giao diện Wireframe", Status = "Done", Priority = "Low", StartDate = timelineStart, Deadline = timelineStart.AddDays(3) },
@@ -134,8 +137,9 @@ namespace TaskManager.Controllers
             return View(vm);
         }
 
-        // API thật cập nhật StartDate & Deadline xuống MySQL
+        // API cập nhật StartDate & Deadline xuống CSDL SQL Server
         [HttpPost]
+        [Route("UpdateSchedule")]
         public IActionResult UpdateSchedule([FromBody] UpdateTaskScheduleRequest req)
         {
             if (req == null || req.TaskId <= 0)
@@ -149,7 +153,7 @@ namespace TaskManager.Controllers
             {
                 var task = _db.Tasks.FirstOrDefault(t => t.TaskID == req.TaskId);
                 if (task == null)
-                    return NotFound(new { success = false, message = "Không tìm thấy công việc trong MySQL!" });
+                    return NotFound(new { success = false, message = "Không tìm thấy công việc trong CSDL SQL Server!" });
 
                 task.StartDate = req.StartDate;
                 task.Deadline = req.Deadline;
@@ -158,7 +162,7 @@ namespace TaskManager.Controllers
                 return Ok(new
                 {
                     success = true,
-                    message = "Đã cập nhật lịch trình vào MySQL!",
+                    message = "Đã cập nhật lịch trình vào CSDL SQL Server!",
                     taskId = task.TaskID,
                     startDate = task.StartDate.ToString("yyyy-MM-ddTHH:mm"),
                     deadline = task.Deadline.ToString("yyyy-MM-ddTHH:mm")
@@ -166,7 +170,7 @@ namespace TaskManager.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { success = false, message = "Lỗi CSDL: " + ex.Message });
+                return StatusCode(500, new { success = false, message = "Lỗi CSDL SQL Server: " + ex.Message });
             }
         }
     }

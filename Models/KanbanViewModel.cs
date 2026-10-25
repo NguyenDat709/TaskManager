@@ -5,8 +5,8 @@ namespace TaskManager.Models
 {
     public class KanbanViewModel
     {
-        public string CurrentUserName { get; set; } = "Nguyễn Văn Quản Lý";
-        public string CurrentWorkspaceName { get; set; } = "App Quản Lý Task";
+        public string CurrentUserName { get; set; } = "Thành viên"; 
+        public string CurrentWorkspaceName { get; set; } = "Dự án mặc định của tôi";
         public string WorkspaceDescription { get; set; } = "Hệ thống quản lý công việc, phân bổ tiến độ và theo dõi Sprint thời gian thực.";
         public int CurrentWorkspaceId { get; set; } = 1;
         public int OverdueCount { get; set; }
@@ -24,7 +24,6 @@ namespace TaskManager.Models
         public string? FilterAssignee { get; set; }
         public string? FilterPriority { get; set; }
     }
-
     public class TaskItemDto
     {
         public int TaskID { get; set; }

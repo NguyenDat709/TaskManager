@@ -1,46 +1,55 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TaskManager.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
-var conn = builder.Configuration.GetConnectionString("DefaultConnection");
+// Lấy chuỗi kết nối CSDL SQL Server từ appsettings.json
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// 1. Đăng ký CSDL AppDbContext duy nhất
 builder.Services.AddDbContext<AppDbContext>(options =>
- options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString));
 
-
+// 2. Đăng ký Controllers, Views và Session
 builder.Services.AddControllersWithViews();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(2); // Thời gian sống của Session
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+// 3. Đăng ký Swagger (cho API)
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
+
+// Bật Swagger UI
 app.UseSwagger();
 app.UseSwaggerUI();
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
 }
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
 app.UseRouting();
 
+app.UseSession();
 app.UseAuthorization();
 
-app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern: "{controller=Auth}/{action=Login}/{id?}");
 
-app.MapControllerRoute(
-    name: "products",
-    pattern: "Products",
-    defaults: new { controller = "Products", action = "ProductList" });
 
-app.MapControllerRoute(
-    name: "productmgr",
-    pattern: "ProductMgr",
-    defaults: new { controller = "Products", action = "ProductMgr" });
-
-app.MapControllerRoute(
-    name: "newproduct",
-    pattern: "NewProduct",
-    defaults: new { controller = "Products", action = "NewProduct" });
 app.MapControllers();
+
 app.Run();

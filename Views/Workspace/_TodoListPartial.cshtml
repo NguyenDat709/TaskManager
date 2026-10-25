@@ -1,0 +1,71 @@
+﻿@{
+    var tasks = ViewBag.Tasks as List<TaskManager.Models.TaskItem> ?? new List<TaskManager.Models.TaskItem>();
+    DateTime now = DateTime.Now;
+
+    var overdueTasks = tasks.Where(t => t.Deadline < now && t.Status != "Done").ToList();
+    var todayTasks = tasks.Where(t => t.Deadline >= now && t.Deadline <= now.AddHours(24) && t.Status != "Done").ToList();
+    var upcomingTasks = tasks.Where(t => (t.Deadline > now.AddHours(24) && t.Status != "Done") || t.Status == "Done").ToList();
+}
+
+<!-- KHỐI 1: QUÁ HẠN CHÓT -->
+@if (overdueTasks.Any())
+{
+    <div class="card mb-3 border-0 shadow-sm bg-white">
+        <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-2">
+            <span class="fw-bold text-danger"><i class="bi bi-exclamation-octagon-fill me-1"></i> CÔNG VIỆC QUÁ HẠN CHÓT</span>
+            <span class="badge bg-danger">@overdueTasks.Count TASK</span>
+        </div>
+        <div class="card-body p-2">
+            @foreach (var task in overdueTasks)
+            {
+                @Html.Partial("_TaskItemRow", task)
+            }
+        </div>
+    </div>
+}
+
+<!-- KHỐI 2: HÔM NAY & 24 GIỜ TỚI -->
+<div class="card mb-3 border-0 shadow-sm bg-white">
+    <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-2">
+        <span class="fw-bold text-dark">CÔNG VIỆC HÔM NAY & 24 GIỜ TỚI</span>
+        <span class="badge bg-light text-dark border">@todayTasks.Count TASKS</span>
+    </div>
+    <div class="card-body p-2">
+        @if (todayTasks.Any())
+        {
+            @foreach (var task in todayTasks)
+            {
+                @Html.Partial("_TaskItemRow", task)
+            }
+        }
+        else
+        {
+            <div class="text-center py-3 text-muted">
+                <small>Không có công việc nào cần hoàn thành trong 24h tới.</small>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- KHỐI 3: CÔNG VIỆC TUẦN NÀY & TIẾP THEO -->
+<div class="card border-0 shadow-sm bg-white">
+    <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-2">
+        <span class="fw-bold text-dark">CÔNG VIỆC TUẦN NÀY & TIẾP THEO</span>
+        <span class="badge bg-light text-dark border">@upcomingTasks.Count TASKS</span>
+    </div>
+    <div class="card-body p-2">
+        @if (upcomingTasks.Any())
+        {
+            @foreach (var task in upcomingTasks)
+            {
+                @Html.Partial("_TaskItemRow", task)
+            }
+        }
+        else
+        {
+            <div class="text-center py-3 text-muted">
+                <small>Chưa có nội dung công việc tiếp theo.</small>
+            </div>
+        }
+    </div>
+</div>

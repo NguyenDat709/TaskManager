@@ -6,6 +6,7 @@ using TaskManager.Models;
 
 namespace TaskManager.Controllers
 {
+    [Route("Kanban")]
     public class KanbanController : Controller
     {
         private readonly AppDbContext _db;
@@ -16,6 +17,8 @@ namespace TaskManager.Controllers
         }
 
         [HttpGet]
+        [Route("")]
+        [Route("Index")]
         public IActionResult Index(string? search, string? assignee, string? priority, int workspaceId = 1)
         {
             var vm = new KanbanViewModel
@@ -30,11 +33,11 @@ namespace TaskManager.Controllers
 
             try
             {
-                // 1. Lấy danh sách Dự án và Người dùng từ MySQL
+                // 1. Lấy danh sách Dự án và Người dùng từ SQL Server
                 vm.Workspaces = _db.Workspaces.ToList();
                 vm.Users = _db.Users.ToList();
 
-                var currentWs = vm.Workspaces.FirstOrDefault(w => w.WorkspaceID == workspaceId) 
+                var currentWs = vm.Workspaces.FirstOrDefault(w => w.WorkspaceID == workspaceId)
                                 ?? vm.Workspaces.FirstOrDefault();
                 if (currentWs != null)
                 {
@@ -80,7 +83,7 @@ namespace TaskManager.Controllers
             }
             catch
             {
-                // Dữ liệu dự phòng nếu chưa bật MySQL
+                // Dữ liệu dự phòng nếu chưa kết nối CSDL
                 taskDtos = new List<TaskItemDto>
                 {
                     new TaskItemDto { TaskID = 1, Title = "Task 1: Thiết kế giao diện Wireframe", Status = "Done", Priority = "Low", AssigneeName = "Phạm Minh", Deadline = DateTime.Now.AddDays(-5), SubtaskCount = 0 },
@@ -123,6 +126,7 @@ namespace TaskManager.Controllers
 
         // API cập nhật trạng thái khi KÉO THẢ thẻ Kanban
         [HttpPost]
+        [Route("UpdateStatus")]
         public IActionResult UpdateStatus([FromBody] UpdateTaskStatusRequest req)
         {
             if (req == null || req.TaskId <= 0 || string.IsNullOrWhiteSpace(req.NewStatus))
@@ -134,7 +138,7 @@ namespace TaskManager.Controllers
             {
                 var dbTask = _db.Tasks.FirstOrDefault(t => t.TaskID == req.TaskId);
                 if (dbTask == null)
-                    return NotFound(new { success = false, message = "Không tìm thấy công việc trong CSDL!" });
+                    return NotFound(new { success = false, message = "Không tìm thấy công việc trong CSDL SQL Server!" });
 
                 dbTask.Status = req.NewStatus;
                 _db.SaveChanges();
@@ -143,12 +147,13 @@ namespace TaskManager.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { success = false, message = "Lỗi lưu CSDL: " + ex.Message });
+                return StatusCode(500, new { success = false, message = "Lỗi lưu CSDL SQL Server: " + ex.Message });
             }
         }
 
         // Tạo mới công việc trực tiếp từ trang Kanban
         [HttpPost]
+        [Route("CreateTask")]
         public IActionResult CreateTask(string title, string? description, string status, string priority, int? assigneeId, DateTime deadline, int workspaceId = 1)
         {
             if (!string.IsNullOrWhiteSpace(title))

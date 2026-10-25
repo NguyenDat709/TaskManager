@@ -674,9 +674,9 @@ D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\refint\TaskManager.dll
 D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\TaskManager.pdb
 D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\TaskManager.genruntimeconfig.cache
 D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\ref\TaskManager.dll
+D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\bin\Debug\net9.0\nuget.config
 D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\bin\Debug\net9.0\appsettings.Development.json
 D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\bin\Debug\net9.0\appsettings.json
-D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\bin\Debug\net9.0\nuget.config
 D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\bin\Debug\net9.0\TaskManager.staticwebassets.runtime.json
 D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\bin\Debug\net9.0\TaskManager.staticwebassets.endpoints.json
 D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\bin\Debug\net9.0\TaskManager.exe
@@ -1000,8 +1000,8 @@ D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\compressed\fd8xjcyas
 D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\compressed\55aknu3dlh-9vr69e8ynj.gz
 D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\compressed\rcu3cqb50z-87fc7y1x7t.gz
 D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\compressed\xfjuxxh9gp-mlv21k5csn.gz
-D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\compressed\v60kpk2lv8-zo5f0i7hc9.gz
-D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\compressed\6f7e06aedn-zo5f0i7hc9.gz
+D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\compressed\v60kpk2lv8-2fwswmkcvm.gz
+D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\compressed\6f7e06aedn-2fwswmkcvm.gz
 D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\staticwebassets.build.json
 D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\staticwebassets.build.json.cache
 D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\staticwebassets.development.json

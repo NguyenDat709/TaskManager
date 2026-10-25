@@ -1,0 +1,34 @@
+﻿@model TaskManager.Models.TaskItem
+
+<div class="d-flex justify-content-between align-items-center p-2 mb-2 bg-light rounded border">
+    <div>
+        <div class="fw-bold text-dark @(Model.Status == "Done" ? "text-decoration-line-through text-muted" : "")">
+            @Model.Title
+        </div>
+        <div class="small text-muted d-flex gap-2 mt-1">
+            <span><i class="bi bi-clock me-1"></i>@Model.Deadline.ToString("dd/MM/yyyy HH:mm")</span>
+            <span class="badge bg-outline-secondary border text-dark" style="font-size: 0.65rem;">Ưu tiên: @Model.Priority</span>
+        </div>
+    </div>
+
+    <div class="d-flex align-items-center gap-2">
+        <!-- Form cập nhật Trạng thái -->
+        <form asp-controller="Workspace" asp-action="UpdateTaskStatus" method="post" class="m-0">
+            <input type="hidden" name="taskId" value="@Model.TaskID" />
+            <input type="hidden" name="workspaceId" value="@Model.WorkspaceID" />
+            <select name="status" class="form-select form-select-sm" style="font-size: 0.75rem;" onchange="this.form.submit()">
+                <option value="To-do" selected="@(Model.Status == "To-do" || Model.Status == "To do")">To-do</option>
+                <option value="In Progress" selected="@(Model.Status == "In Progress")">In Progress</option>
+                <option value="Review" selected="@(Model.Status == "Review")">Review</option>
+                <option value="Done" selected="@(Model.Status == "Done")">Done</option>
+            </select>
+        </form>
+
+        <!-- Form Xóa Task -->
+        <form asp-controller="Workspace" asp-action="DeleteTask" method="post" class="m-0" onsubmit="return confirm('Bạn có chắc muốn xóa công việc này?');">
+            <input type="hidden" name="taskId" value="@Model.TaskID" />
+            <input type="hidden" name="workspaceId" value="@Model.WorkspaceID" />
+            <button type="submit" class="btn btn-sm btn-outline-danger border-0"><i class="bi bi-trash"></i></button>
+        </form>
+    </div>
+</div>

@@ -44,14 +44,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR2FudHRcX1NjaGVkdWxlTW9kYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HOCTRENLOP/LẬP TRÌNH WEB/TaskManager/Views/Home/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/HOCTRENLOP/LẬP TRÌNH WEB/TaskManager/Views/Home/Privacy.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/HOCTRENLOP/LẬP TRÌNH WEB/TaskManager/Views/Kanban/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2FuYmFuXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -86,6 +78,22 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/HOCTRENLOP/LẬP TRÌNH WEB/TaskManager/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/HOCTRENLOP/LẬP TRÌNH WEB/TaskManager/Views/Workspace/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya3NwYWNlXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/HOCTRENLOP/LẬP TRÌNH WEB/TaskManager/Views/Workspace/_CalendarPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya3NwYWNlXF9DYWxlbmRhclBhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/HOCTRENLOP/LẬP TRÌNH WEB/TaskManager/Views/Workspace/_TaskItemRow.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya3NwYWNlXF9UYXNrSXRlbVJvdy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/HOCTRENLOP/LẬP TRÌNH WEB/TaskManager/Views/Workspace/_TodoListPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya3NwYWNlXF9Ub2RvTGlzdFBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/HOCTRENLOP/LẬP TRÌNH WEB/TaskManager/Views/_ViewImports.cshtml]
