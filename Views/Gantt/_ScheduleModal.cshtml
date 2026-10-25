@@ -1,0 +1,31 @@
+<div id="scheduleModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden flex items-center justify-center z-50 p-4">
+    <div class="bg-white border border-slate-200 rounded-2xl p-6 w-full max-w-md shadow-2xl">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+            <h3 class="font-bold text-sm text-slate-800 uppercase">ĐIỀU CHỈNH LỊCH TRÌNH GANTT</h3>
+            <button type="button" onclick="closeScheduleModal()" class="w-7 h-7 rounded-lg hover:bg-slate-100 text-slate-500 text-xs font-bold transition">✕</button>
+        </div>
+        <div class="space-y-3.5 text-xs">
+            <input type="hidden" id="modalTaskId" />
+            <div>
+                <label class="font-semibold text-slate-700 block mb-1">Tên công việc:</label>
+                <div id="modalTaskTitle" class="p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-semibold text-slate-800"></div>
+            </div>
+            <div>
+                <label class="font-semibold text-slate-700 block mb-1">Ngày bắt đầu (StartDate):</label>
+                <input type="datetime-local" id="modalStartDate" class="w-full border border-slate-300 p-2.5 rounded-lg focus:border-blue-500 focus:outline-none transition" />
+            </div>
+            <div>
+                <label class="font-semibold text-slate-700 block mb-1">Hạn chót (Deadline):</label>
+                <input type="datetime-local" id="modalDeadline" class="w-full border border-slate-300 p-2.5 rounded-lg focus:border-blue-500 focus:outline-none transition" />
+            </div>
+            <div id="modalError" class="text-rose-600 font-bold hidden bg-rose-50 p-2 rounded-lg border border-rose-200"></div>
+            
+            <div class="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
+                <button type="button" onclick="closeScheduleModal()" class="px-4 py-2 border border-slate-300 text-slate-600 hover:bg-slate-100 rounded-lg font-medium transition">Hủy</button>
+                <button type="button" onclick="saveScheduleFromModal()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-sm transition">
+                    Lưu thay đổi
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

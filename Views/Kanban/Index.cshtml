@@ -1,0 +1,68 @@
+@model TaskManager.Models.KanbanViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Bảng Kanban";
+
+    var columns = new[]
+    {
+        new { Status = "To-do", Title = "CỘT 1: TO DO (CẦN LÀM)", Tasks = Model.TodoTasks, DotColor = "bg-slate-500", BadgeStyle = "bg-white text-slate-700 border border-slate-200", ShowBottomAddButton = true },
+        new { Status = "In Progress", Title = "CỘT 2: IN PROGRESS (ĐANG LÀM)", Tasks = Model.InProgressTasks, DotColor = "bg-blue-600", BadgeStyle = "bg-blue-50 text-blue-700 border border-blue-200", ShowBottomAddButton = true },
+        new { Status = "Review", Title = "CỘT 3: REVIEW (ĐANG DUYỆT)", Tasks = Model.ReviewTasks, DotColor = "bg-amber-500", BadgeStyle = "bg-amber-50 text-amber-700 border border-amber-200", ShowBottomAddButton = false },
+        new { Status = "Done", Title = "CỘT 4: DONE (HOÀN THÀNH)", Tasks = Model.DoneTasks, DotColor = "bg-emerald-500", BadgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200", ShowBottomAddButton = false }
+    };
+}
+
+<main class="p-6 space-y-5 w-full flex-1 overflow-x-auto">
+    <!-- 1. Gọi Component Header Dự án -->
+    <partial name="_ProjectHeader" model="Model" />
+
+    <!-- 2. Gọi Component Bộ lọc đa tiêu chí -->
+    <partial name="_FilterBar" model="Model" />
+
+    <!-- 3. Bốn cột Kanban -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 items-stretch w-full">
+        @foreach (var col in columns)
+        {
+            <section class="bg-slate-100/90 border border-slate-200/90 rounded-xl p-3.5 flex flex-col min-h-[540px] shadow-2xs">
+                <!-- Header cột -->
+                <div class="flex justify-between items-center mb-3 pb-2.5 border-b border-slate-200/90 px-1">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full @col.DotColor"></span>
+                        <h2 class="font-bold text-xs text-slate-800 uppercase tracking-wide">@col.Title</h2>
+                    </div>
+                    <span class="column-count text-xs font-bold px-2.5 py-0.5 rounded-full @col.BadgeStyle">
+                        @col.Tasks.Count
+                    </span>
+                </div>
+
+                <!-- Vùng thả thẻ: Gọi 1 dòng Component _TaskCard cho mỗi công việc -->
+                <div class="space-y-3 overflow-y-auto flex-1 pr-0.5 transition"
+                     data-status="@col.Status"
+                     ondragover="allowDrop(event)"
+                     ondragleave="leaveDrop(event)"
+                     ondrop="dropCard(event, '@col.Status')">
+                    @foreach (var task in col.Tasks)
+                    {
+                        <partial name="_TaskCard" model="task" />
+                    }
+                </div>
+
+                @if (col.ShowBottomAddButton)
+                {
+                    <div class="pt-3 mt-3 border-t border-slate-200/80">
+                        <button onclick="openCreateModal('@col.Status')"
+                                class="w-full py-2.5 bg-white hover:bg-blue-600 text-slate-700 hover:text-white border border-slate-300 hover:border-blue-600 rounded-lg text-xs font-bold uppercase tracking-wide shadow-2xs transition">
+                            + THÊM CÔNG VIỆC
+                        </button>
+                    </div>
+                }
+            </section>
+        }
+    </div>
+</main>
+
+<partial name="_CreateTaskModal" model="Model" />
+
+@section Scripts {
+    <script src="~/js/kanban.js"></script>
+}

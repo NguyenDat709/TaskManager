@@ -1,0 +1,60 @@
+@model TaskManager.Models.TaskItemDto
+@{
+    bool isOverdue = Model.Status != "Done" && Model.Deadline < DateTime.Now;
+    string priorityBadge = Model.Priority switch
+    {
+        "Urgent" => "bg-rose-50 text-rose-600 border border-rose-200",
+        "High" => "bg-amber-50 text-amber-700 border border-amber-200",
+        "Medium" => "bg-blue-50 text-blue-600 border border-blue-200",
+        _ => "bg-slate-100 text-slate-600"
+    };
+}
+
+<div id="task-card-@Model.TaskID"
+     draggable="true"
+     data-title="@Model.Title"
+     data-overdue="@(isOverdue ? "true" : "false")"
+     ondragstart="dragStart(event, @Model.TaskID)"
+     class="task-card bg-white p-4 rounded-lg border transition cursor-grab active:cursor-grabbing shadow-sm hover:shadow-md @(isOverdue ? "border-rose-300 ring-1 ring-rose-200/50" : "border-slate-200 hover:border-blue-400")">
+    
+    <div class="flex items-center justify-between gap-2 mb-2">
+        <span class="font-mono text-[11px] font-bold px-2 py-0.5 rounded @(isOverdue ? "bg-rose-600 text-white" : "bg-blue-50 text-blue-700 border border-blue-200")">
+            PRJ-TASK-@Model.TaskID
+        </span>
+        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full @priorityBadge">
+            @Model.Priority
+        </span>
+    </div>
+
+    <div class="font-bold text-sm mb-1.5 @(Model.Status == "Done" ? "line-through text-slate-400" : "text-slate-800")">
+        @Model.Title
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(Model.Description))
+    {
+        <p class="text-xs text-slate-500 line-clamp-2 mb-3">@Model.Description</p>
+    }
+
+    <div class="text-xs text-slate-500 pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2">
+        <span>
+            ⏰ Hạn:
+            <strong class="@(isOverdue ? "text-rose-600" : "text-slate-700")">
+                @Model.Deadline.ToString("dd/MM HH:mm")
+            </strong>
+        </span>
+
+        @if (Model.SubtaskCount > 0)
+        {
+            <span class="text-[11px] font-semibold px-2 py-0.5 bg-slate-100 text-slate-700 rounded">
+                ☑️ @Model.CompletedSubtaskCount/@Model.SubtaskCount
+            </span>
+        }
+    </div>
+
+    <div class="mt-2.5 flex items-center justify-between text-xs">
+        <span class="text-slate-400">Phụ trách:</span>
+        <span class="font-medium text-slate-700 bg-slate-50 px-2.5 py-0.5 rounded-full border border-slate-200">
+            👤 @Model.AssigneeName
+        </span>
+    </div>
+</div>

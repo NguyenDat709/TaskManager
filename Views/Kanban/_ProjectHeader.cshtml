@@ -1,0 +1,74 @@
+@model TaskManager.Models.KanbanViewModel
+@{
+    int totalTasks = Model.TodoTasks.Count + Model.InProgressTasks.Count + Model.ReviewTasks.Count + Model.DoneTasks.Count;
+    int doneTasks = Model.DoneTasks.Count;
+    int progressPercent = totalTasks > 0 ? (int)Math.Round((double)doneTasks / totalTasks * 100) : 0;
+    string inviteCode = $"PRJ-WS{Model.CurrentWorkspaceId}-2026";
+}
+
+<section class="bg-white border border-slate-200 border-l-4 border-l-blue-600 rounded-xl p-5 shadow-sm flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 w-full">
+    <div class="space-y-2 max-w-2xl">
+        <div class="flex flex-wrap items-center gap-2.5">
+            <span class="px-2.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-md text-[11px] font-bold uppercase tracking-wide">
+                Không gian dự án
+            </span>
+            <span id="syncStatus" class="text-xs font-medium text-slate-500">
+                • Trạng thái: <strong class="text-emerald-600">Đã kết nối MySQL</strong>
+            </span>
+        </div>
+
+        <h1 class="text-lg font-extrabold text-slate-900 tracking-tight">@Model.CurrentWorkspaceName</h1>
+        <p class="text-xs text-slate-500 leading-relaxed">@Model.WorkspaceDescription</p>
+
+        <div class="pt-1 flex flex-wrap items-center gap-4 text-xs text-slate-600">
+            <span class="flex items-center gap-1.5 font-medium">
+                 Tổng số: <strong class="text-slate-900">@totalTasks task</strong>
+            </span>
+            <span class="text-slate-300">|</span>
+            <span class="flex items-center gap-1.5 font-medium">
+                 Tiến độ hoàn thành: <strong class="text-blue-600">@progressPercent% (@doneTasks/@totalTasks)</strong>
+            </span>
+            <span class="text-slate-300">|</span>
+            <span class="flex items-center gap-1.5 font-medium">
+                 Quá hạn: <strong class="text-rose-600">@Model.OverdueCount task</strong>
+            </span>
+        </div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-4 lg:border-l lg:border-slate-200 lg:pl-6">
+        <div>
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Thành viên dự án</div>
+            <div class="flex items-center -space-x-2">
+                @if (Model.Users.Any())
+                {
+                    foreach (var u in Model.Users.Take(4))
+                    {
+                        <div title="@u.FullName" class="w-8 h-8 rounded-full bg-blue-600 text-white border-2 border-white flex items-center justify-center text-xs font-bold shadow-xs">
+                            @u.FullName.Substring(0, 1)
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="w-8 h-8 rounded-full bg-blue-600 text-white border-2 border-white flex items-center justify-center text-xs font-bold">Q</div>
+                    <div class="w-8 h-8 rounded-full bg-emerald-600 text-white border-2 border-white flex items-center justify-center text-xs font-bold">H</div>
+                    <div class="w-8 h-8 rounded-full bg-amber-500 text-white border-2 border-white flex items-center justify-center text-xs font-bold">T</div>
+                }
+                <button onclick="alert('Mở danh sách thành viên dự án')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 border-2 border-white flex items-center justify-center text-[11px] font-bold transition">+</button>
+            </div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2">
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Mã mời tham gia</div>
+            <div class="flex items-center gap-2 mt-0.5">
+                <span id="inviteCodeText" class="font-mono text-xs font-bold text-slate-800">@inviteCode</span>
+                <button type="button" onclick="copyInviteCode('@inviteCode')" class="text-[11px] font-semibold text-blue-600 hover:text-blue-800 underline">Sao chép</button>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <button type="button" onclick="openCreateModal('To-do')" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-xs transition">+ Thêm Task</button>
+            <a href="/Gantt?workspaceId=@Model.CurrentWorkspaceId" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition">Xem Gantt</a>
+        </div>
+    </div>
+</section>

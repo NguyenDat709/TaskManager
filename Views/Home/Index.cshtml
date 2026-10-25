@@ -1,0 +1,511 @@
+﻿@model TaskManager.Models.HomeDashboardViewModel
+@{
+    Layout = null; 
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TaskWeb - Trang chủ Quản lý Công việc</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-blue-100 selection:text-blue-900">
+
+    <div class="flex min-h-screen w-full">
+        <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col justify-between shrink-0 shadow-lg">
+            <div>
+                <div class="h-16 px-6 flex items-center gap-2.5 border-b border-slate-800">
+                    <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-lg shadow-sm">
+                        T
+                    </div>
+                    <span class="font-bold text-lg tracking-tight text-white">TaskWeb</span>
+                </div>
+
+
+                <nav class="p-4 space-y-1.5">
+                    <a href="/" class="flex items-center gap-3 px-3.5 py-2.5 text-sm font-semibold bg-blue-600 text-white rounded-lg shadow-sm transition">
+                        Trang chủ
+                    </a>
+                    <a href="/Kanban" class="flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition">
+                        Kanban
+                    </a>
+                    <a href="#checklist" class="flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition">
+                        Task & Checklist
+                    </a>
+                    <a href="/Gantt" class="flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition">
+                        Gantt
+                    </a>
+                    <a href="#analytics" class="flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition">
+                        Báo cáo & Thống kê
+                    </a>
+                </nav>
+
+                <div class="px-4 mt-4">
+                    <div class="flex justify-between items-center text-[11px] font-bold text-slate-500 uppercase px-2 mb-2.5 tracking-wider">
+                        <span>DỰ ÁN CỦA BẠN</span>
+                        <span class="bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">@(Model.Workspaces.Any() ? Model.Workspaces.Count : 2)</span>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        @if (Model.Workspaces.Any())
+                        {
+                            foreach (var ws in Model.Workspaces)
+                            {
+                                <div class="flex items-center justify-between px-3 py-2 text-xs font-medium bg-slate-800/70 text-slate-200 border border-slate-700/80 rounded-lg hover:border-blue-500/50 transition cursor-pointer">
+                                    <span class="truncate">📁 @ws.WorkspaceName</span>
+                                    <span class="text-[10px] px-1.5 py-0.5 bg-blue-500/20 text-blue-300 border border-blue-500/30 rounded font-semibold">OWNER</span>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="flex items-center justify-between px-3 py-2 text-xs font-medium bg-slate-800 text-white border border-slate-700 rounded-lg">
+                                <span class="truncate">📁 Thiết kế E-Commerce</span>
+                                <span class="text-[10px] px-1.5 py-0.5 bg-blue-500/20 text-blue-300 rounded font-semibold">OWNER</span>
+                            </div>
+                            <div class="flex items-center justify-between px-3 py-2 text-xs font-medium text-slate-400 hover:bg-slate-800/50 rounded-lg transition">
+                                <span class="truncate">📁 Mobile App Banking</span>
+                                <span class="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">MEM</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 border-t border-slate-800 space-y-2">
+                <button onclick="alert('Mở popup mời thành viên qua Email / Link mời (R06)')" class="w-full py-2 px-3 bg-slate-800 hover:bg-blue-600 text-slate-200 hover:text-white border border-slate-700 hover:border-blue-500 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition">
+                    <span>👤+</span> Mời thành viên
+                </button>
+                <a href="#settings" class="flex items-center gap-2 px-3 py-1.5 text-xs text-slate-400 hover:text-white transition">
+                    <span>⚙️</span> Cài đặt dự án
+                </a>
+            </div>
+        </aside>
+
+        <div class="flex-1 flex flex-col min-w-0 w-full">
+            
+            <header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between gap-4 sticky top-0 z-10 w-full">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-sm font-semibold text-slate-800">📁 @Model.CurrentWorkspaceName</span>
+                    <span class="text-xs px-2.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-full font-medium">Owner ⌄</span>
+                </div>
+
+                <form method="get" action="/" class="flex-1 max-w-xl">
+                    <input type="text" name="search" placeholder="🔍 Tìm kiếm task, git tag, thành viên (Ctrl+K)..."
+                           class="w-full bg-slate-100 border border-slate-200 rounded-lg px-4 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition" />
+                </form>
+
+                <div class="flex items-center gap-4">
+                    <button onclick="document.getElementById('createTaskModal').classList.remove('hidden')"
+                            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-sm transition flex items-center gap-1">
+                        <span>+</span> Tạo mới
+                    </button>
+                    <button class="relative p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition" title="Thông báo">
+                        🔔
+                        @if (Model.OverdueCount > 0)
+                        {
+                            <span class="absolute top-1 right-1 w-2 h-2 bg-rose-500 rounded-full"></span>
+                        }
+                    </button>
+                    <span class="text-sm text-slate-500 hover:text-slate-800 cursor-pointer">❓</span>
+                    <div class="flex items-center gap-2.5 pl-3 border-l border-slate-200">
+                        <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 border border-blue-200 flex items-center justify-center text-xs font-bold">
+                            👤
+                        </div>
+                        <div class="text-xs leading-tight">
+                            <div class="font-bold text-slate-800">@Model.CurrentUserName</div>
+                            <div class="text-[10px] text-slate-500 font-medium">Project Owner</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="p-6 space-y-6 w-full">
+                
+                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-wrap items-center justify-between gap-4 border-l-4 border-l-blue-600 w-full">
+                    <div>
+                        <h1 class="font-bold text-base text-slate-900 tracking-tight">
+                            XIN CHÀO, @Model.CurrentUserName.ToUpper()! 👋
+                        </h1>
+                        <p class="text-xs text-slate-500 mt-1">
+                            Theo dõi toàn bộ công việc bạn đảm nhận và cảnh báo tiến độ thời gian thực (R18)
+                        </p>
+                    </div>
+                    <div class="flex bg-slate-100 p-1 rounded-lg border border-slate-200">
+                        <button id="btnTodoView" onclick="switchView('todo')"
+                                class="px-4 py-1.5 text-xs font-semibold bg-blue-600 text-white rounded-md shadow-sm transition">
+                            To-Do List
+                        </button>
+                        <button id="btnCalendarView" onclick="switchView('calendar')"
+                                class="px-4 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 rounded-md transition">
+                            Calendar
+                        </button>
+                    </div>
+                </div>
+
+                @if (Model.OverdueCount > 0)
+                {
+                    <div id="overdueBanner" class="bg-rose-50 border border-rose-200 rounded-xl px-5 py-3.5 flex flex-wrap items-center justify-between gap-4 w-full">
+                        <div class="text-xs font-semibold text-rose-900 flex items-center gap-2.5">
+                            <span class="px-2 py-0.5 bg-rose-600 text-white text-[10px] font-bold rounded uppercase">CẢNH BÁO R12</span>
+                            <span>Bạn đang có <strong class="underline">@Model.OverdueCount công việc</strong> vượt quá hạn chót cần xử lý!</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <a href="#block-overdue" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-[11px] font-semibold transition shadow-sm">
+                                XEM NGAY
+                            </a>
+                            <button onclick="document.getElementById('overdueBanner').style.display='none'"
+                                    class="px-3 py-1.5 bg-white hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-[11px] font-medium transition">
+                                ĐÓNG
+                            </button>
+                        </div>
+                    </div>
+                }
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 w-full">
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">TỔNG VIỆC ĐƯỢC GIAO</div>
+                        <div class="text-3xl font-extrabold text-slate-800 my-2">@Model.TotalAssigned</div>
+                        <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-blue-600 w-full rounded-full"></div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">ĐANG THỰC HIỆN</div>
+                        <div class="text-3xl font-extrabold text-blue-600 my-2">@Model.InProgressCount</div>
+                        <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-blue-500 w-2/3 rounded-full"></div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">SẮP ĐẾN HẠN (&lt;24H)</div>
+                        <div class="text-3xl font-extrabold text-slate-800 my-2">@Model.DueWithin24hCount</div>
+                        <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-amber-500 w-1/2 rounded-full"></div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">QUÁ HẠN CHÓT</div>
+                        <div class="text-3xl font-extrabold text-rose-600 my-2">@Model.OverdueCount</div>
+                        <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-rose-500 w-1/3 rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">
+                    
+                    <div id="todoViewSection" class="lg:col-span-8 space-y-6">
+                        
+                        <section id="block-overdue" class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                            <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                                    <h2 class="font-bold text-sm text-slate-800 uppercase tracking-wide">
+                                        CÔNG VIỆC QUÁ HẠN CHÓT (DEADLINE PASSED)
+                                    </h2>
+                                </div>
+                                <span class="text-xs font-semibold px-2.5 py-0.5 bg-rose-50 text-rose-600 border border-rose-200 rounded-full">@Model.OverdueTasks.Count TASK</span>
+                            </div>
+
+                            <div class="space-y-3">
+                                @if (Model.OverdueTasks.Any())
+                                {
+                                    foreach (var task in Model.OverdueTasks)
+                                    {
+                                        var subCount = Model.SubtaskCounts.ContainsKey(task.TaskID) ? Model.SubtaskCounts[task.TaskID] : 0;
+                                        <div class="p-4 bg-rose-50/40 border border-rose-200 rounded-lg flex flex-wrap justify-between items-center gap-3 hover:border-rose-300 transition">
+                                            <div>
+                                                <div class="flex items-center gap-2.5">
+                                                    <span class="font-mono text-[11px] font-bold px-2 py-0.5 bg-rose-600 text-white rounded">
+                                                        PRJ-TASK-@task.TaskID
+                                                    </span>
+                                                    <span class="font-bold text-sm text-slate-900">@task.Title</span>
+                                                </div>
+                                                <div class="text-xs text-slate-500 mt-1.5 flex flex-wrap gap-x-3 gap-y-1">
+                                                    <span>⏰ Hạn: <strong class="text-rose-600">@task.Deadline.ToString("HH:mm dd/MM/yyyy")</strong></span>
+                                                    <span>• Trạng thái: <strong class="text-slate-700">@task.Status</strong></span>
+                                                    <span>• Subtasks: <strong class="text-slate-700">@subCount</strong></span>
+                                                </div>
+                                            </div>
+                                            <span class="text-xs font-semibold px-3 py-1 bg-white border border-rose-200 text-rose-600 rounded-full shadow-sm">
+                                                Quá hạn
+                                            </span>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="bg-slate-50 border border-dashed border-slate-200 p-6 text-center rounded-lg">
+                                        <div class="font-semibold text-xs text-slate-600">🎉 Tuyệt vời! Không có công việc nào bị quá hạn</div>
+                                        <p class="text-[11px] text-slate-400 mt-1">
+                                            Hiển thị: Mã Task, Tên Task, Deadline, Trạng thái, Số Subtasks, Người phụ trách
+                                        </p>
+                                    </div>
+                                }
+                            </div>
+                        </section>
+
+                        <section class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                            <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                                    <h2 class="font-bold text-sm text-slate-800 uppercase tracking-wide">
+                                        CÔNG VIỆC HÔM NAY & 24 GIỜ TỚI
+                                    </h2>
+                                </div>
+                                <span class="text-xs font-semibold px-2.5 py-0.5 bg-blue-50 text-blue-600 border border-blue-200 rounded-full">@Model.TodayAnd24hTasks.Count TASKS</span>
+                            </div>
+
+                            <div class="space-y-3">
+                                @if (Model.TodayAnd24hTasks.Any())
+                                {
+                                    foreach (var task in Model.TodayAnd24hTasks)
+                                    {
+                                        <div class="p-4 bg-white border border-slate-200 hover:border-blue-300 rounded-lg flex flex-wrap justify-between items-center gap-3 transition shadow-sm">
+                                            <div>
+                                                <div class="flex items-center gap-2.5">
+                                                    <span class="font-mono text-[11px] font-bold px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded">
+                                                        PRJ-TASK-@task.TaskID
+                                                    </span>
+                                                    <span class="font-bold text-sm text-slate-800">@task.Title</span>
+                                                </div>
+                                                <div class="text-xs text-slate-500 mt-1.5 flex flex-wrap gap-x-3">
+                                                    <span>⏳ Hạn chót: <strong class="text-slate-700">@task.Deadline.ToString("HH:mm dd/MM/yyyy")</strong></span>
+                                                    <span>• Ưu tiên: <strong class="text-blue-600">@task.Priority</strong></span>
+                                                </div>
+                                            </div>
+                                            <span class="text-xs font-semibold px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-full">
+                                                &lt; 24h
+                                            </span>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="bg-slate-50 border border-dashed border-slate-200 p-6 text-center rounded-lg">
+                                        <div class="font-semibold text-xs text-slate-600">Danh sách trống</div>
+                                        <p class="text-[11px] text-slate-400 mt-1">
+                                            Chứa các task ưu tiên cao cần hoàn thành trong ngày hôm nay hoặc 24 giờ tới.
+                                        </p>
+                                    </div>
+                                }
+                            </div>
+                        </section>
+
+                        <section class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                            <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+                                    <h2 class="font-bold text-sm text-slate-800 uppercase tracking-wide">
+                                        CÔNG VIỆC TUẦN NÀY & TIẾP THEO
+                                    </h2>
+                                </div>
+                                <span class="text-xs font-semibold px-2.5 py-0.5 bg-slate-100 text-slate-600 rounded-full">@Model.UpcomingAndOtherTasks.Count TASKS</span>
+                            </div>
+
+                            <div class="space-y-3">
+                                @if (Model.UpcomingAndOtherTasks.Any())
+                                {
+                                    foreach (var task in Model.UpcomingAndOtherTasks)
+                                    {
+                                        <div class="p-4 bg-slate-50/70 border border-slate-200/80 hover:border-slate-300 rounded-lg flex flex-wrap justify-between items-center gap-3 transition">
+                                            <div>
+                                                <div class="flex items-center gap-2.5">
+                                                    <span class="font-mono text-[11px] font-medium px-2 py-0.5 bg-white text-slate-600 border border-slate-200 rounded">
+                                                        PRJ-TASK-@task.TaskID
+                                                    </span>
+                                                    <span class="font-semibold text-sm @(task.Status == "Done" ? "line-through text-slate-400" : "text-slate-800")">
+                                                        @task.Title
+                                                    </span>
+                                                </div>
+                                                <div class="text-xs text-slate-500 mt-1.5">
+                                                    📅 Deadline: @task.Deadline.ToString("dd/MM/yyyy") &nbsp;•&nbsp; Ưu tiên: @task.Priority
+                                                </div>
+                                            </div>
+                                            <span class="text-xs font-medium px-3 py-1 bg-white border border-slate-200 text-slate-700 rounded-full">
+                                                @task.Status
+                                            </span>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="bg-slate-50 border border-dashed border-slate-200 p-6 text-center rounded-lg">
+                                        <div class="font-semibold text-xs text-slate-600">Chưa có công việc dự kiến nào</div>
+                                        <p class="text-[11px] text-slate-400 mt-1">
+                                            Chứa các task Backlog, Planning, Draft và Task đã hoàn thành.
+                                        </p>
+                                    </div>
+                                }
+                            </div>
+                        </section>
+                    </div>
+
+                    <div id="calendarViewSection" class="lg:col-span-8 hidden">
+                        <section class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                            <h2 class="font-bold text-sm text-slate-800 uppercase mb-4">LỊCH LÀM VIỆC CÁ NHÂN (CALENDAR VIEW - R18)</h2>
+                            <div class="grid grid-cols-7 bg-slate-100 border border-slate-200 rounded-t-lg text-center text-xs font-bold text-slate-600 py-2.5">
+                                <div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div><div>CN</div>
+                            </div>
+                            <div class="grid grid-cols-7 border-l border-slate-200">
+                                @for (int day = 1; day <= 31; day++)
+                                {
+                                    <div onclick="selectDate(@day)" class="min-h-[100px] border-r border-b border-slate-200 p-2 text-xs hover:bg-blue-50/40 cursor-pointer transition">
+                                        <div class="font-semibold text-slate-600">@day/10</div>
+                                        @if (day == 4 || day == 10 || day == 25)
+                                        {
+                                            <div class="mt-1.5 px-2 py-1 bg-blue-600 text-white text-[11px] font-medium rounded truncate shadow-sm">
+                                                Hạn Task #@day
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="lg:col-span-4 space-y-6">
+                        
+                        <section class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                            <h3 class="font-bold text-xs text-slate-800 uppercase tracking-wider mb-3">
+                                CHI TIẾT NGÀY ĐÃ CHỌN (<span id="selectedDateLabel" class="text-blue-600">Hôm nay</span>)
+                            </h3>
+                            <div id="selectedDateTasks" class="bg-slate-50 border border-slate-200/80 rounded-lg p-4 text-center text-xs text-slate-500 mb-3">
+                                Đang có <strong class="text-slate-700">@Model.TodayAnd24hTasks.Count công việc</strong> cần thực hiện trong ngày đang chọn.
+                            </div>
+                            <button onclick="document.getElementById('createTaskModal').classList.remove('hidden')"
+                                    class="w-full py-2.5 bg-blue-50 hover:bg-blue-600 text-blue-700 hover:text-white border border-blue-200 hover:border-blue-600 rounded-lg text-xs font-semibold transition">
+                                + THÊM CÔNG VIỆC MỚI
+                            </button>
+                        </section>
+
+                        <section class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="font-bold text-xs text-slate-800 uppercase tracking-wider">MINI CALENDAR</h3>
+                                <span class="text-xs font-semibold px-2 py-0.5 bg-slate-100 text-slate-600 rounded">Tháng 10</span>
+                            </div>
+                            <div class="grid grid-cols-7 gap-1 text-center text-[11px] mb-3">
+                                <span class="text-slate-400 font-semibold py-1">T2</span>
+                                <span class="text-slate-400 font-semibold py-1">T3</span>
+                                <span class="text-slate-400 font-semibold py-1">T4</span>
+                                <span class="text-slate-400 font-semibold py-1">T5</span>
+                                <span class="text-slate-400 font-semibold py-1">T6</span>
+                                <span class="text-slate-400 font-semibold py-1">T7</span>
+                                <span class="text-slate-400 font-semibold py-1">CN</span>
+                                @for (int d = 1; d <= 31; d++)
+                                {
+                                    bool hasEvent = (d == 4 || d == 10 || d == 15 || d == 24 || d == 25);
+                                    <button onclick="selectDate(@d)"
+                                            class="py-1.5 rounded-lg text-xs transition @(d == 24 ? "bg-blue-600 text-white font-bold shadow-sm" : "text-slate-700 hover:bg-slate-100")">
+                                        @d
+                                        @if (hasEvent)
+                                        {
+                                            <span class="block w-1 h-1 @(d == 24 ? "bg-white" : "bg-blue-600") rounded-full mx-auto mt-0.5"></span>
+                                        }
+                                    </button>
+                                }
+                            </div>
+                            <div class="bg-slate-50 rounded-lg p-2.5 text-center text-[11px] text-slate-500 border border-slate-100">
+                                Chấm tròn hiển thị ngày có hạn chót công việc
+                            </div>
+                        </section>
+
+                        <section class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="font-bold text-xs text-slate-800 uppercase tracking-wider">HOẠT ĐỘNG GẦN ĐÂY</h3>
+                                <span class="text-[10px] font-semibold px-2 py-0.5 bg-blue-50 text-blue-600 rounded">REALTIME</span>
+                            </div>
+
+                            <div class="space-y-2.5 mb-4">
+                                @if (Model.RecentLogs.Any())
+                                {
+                                    foreach (var log in Model.RecentLogs)
+                                    {
+                                        <div class="p-3 bg-slate-50 border border-slate-200/70 rounded-lg text-xs">
+                                            <div class="text-slate-700 font-medium">@log.Content</div>
+                                            <div class="text-[10px] text-slate-400 mt-1">
+                                                🕒 @log.CreatedAt.ToString("HH:mm dd/MM/yyyy")
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="bg-slate-50 border border-dashed border-slate-200 rounded-lg p-5 text-center text-xs text-slate-400">
+                                        Luồng thông báo và cập nhật hoạt động thời gian thực
+                                    </div>
+                                }
+                            </div>
+
+                            <button class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition">
+                                XEM TẤT CẢ LỊCH SỬ
+                            </button>
+                        </section>
+
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div id="createTaskModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white border border-slate-200 rounded-xl p-6 w-full max-w-md shadow-xl">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+                <h3 class="font-bold text-sm text-slate-800 uppercase">TẠO CÔNG VIỆC MỚI (P02 / R02)</h3>
+                <button onclick="document.getElementById('createTaskModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 text-sm font-bold">✕</button>
+            </div>
+            <form method="post" action="/Home/QuickCreateTask" class="space-y-4 text-xs">
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1.5">Tiêu đề công việc (1 - 150 ký tự):</label>
+                    <input type="text" name="title" required maxlength="150" class="w-full border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 p-2.5 rounded-lg outline-none transition" placeholder="Nhập tên Task..." />
+                </div>
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1.5">Độ ưu tiên:</label>
+                    <select name="priority" class="w-full border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 p-2.5 rounded-lg bg-white outline-none transition">
+                        <option value="Low">Low</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="High">High</option>
+                        <option value="Urgent">Urgent</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1.5">Hạn chót (Deadline):</label>
+                    <input type="datetime-local" name="deadline" required class="w-full border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 p-2.5 rounded-lg outline-none transition" />
+                </div>
+                <div class="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="document.getElementById('createTaskModal').classList.add('hidden')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg transition">Hủy</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-sm transition">Lưu Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function switchView(mode) {
+            const todoSec = document.getElementById('todoViewSection');
+            const calSec = document.getElementById('calendarViewSection');
+            const btnTodo = document.getElementById('btnTodoView');
+            const btnCal = document.getElementById('btnCalendarView');
+
+            if (mode === 'calendar') {
+                todoSec.classList.add('hidden');
+                calSec.classList.remove('hidden');
+                btnCal.className = "px-4 py-1.5 text-xs font-semibold bg-blue-600 text-white rounded-md shadow-sm transition";
+                btnTodo.className = "px-4 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 rounded-md transition";
+            } else {
+                calSec.classList.add('hidden');
+                todoSec.classList.remove('hidden');
+                btnTodo.className = "px-4 py-1.5 text-xs font-semibold bg-blue-600 text-white rounded-md shadow-sm transition";
+                btnCal.className = "px-4 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 rounded-md transition";
+            }
+        }
+
+        function selectDate(day) {
+            document.getElementById('selectedDateLabel').innerText = day + '/10/2026';
+            document.getElementById('selectedDateTasks').innerHTML = 'Đang hiển thị các công việc có hạn chót vào ngày <strong class="text-blue-600">' + day + '/10/2026</strong>.';
+        }
+    </script>
+</body>
+</html>

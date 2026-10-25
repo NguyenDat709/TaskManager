@@ -1,0 +1,43 @@
+@model dynamic
+@{
+    var loggedInName = Context.Request.Cookies["TaskWeb_UserName"] ?? Model?.CurrentUserName ?? "Nguyễn Văn Đạt";
+}
+<header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between gap-4 sticky top-0 z-10 w-full">
+    <div class="flex items-center gap-2.5">
+        <span class="text-sm font-semibold text-slate-800">📁 @(Model?.CurrentWorkspaceName ?? "Thiết kế E-Commerce")</span>
+        <span class="text-xs px-2.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-full font-medium">Owner ⌄</span>
+    </div>
+
+    <form method="get" action="/Kanban" class="flex-1 max-w-xl">
+        <input type="hidden" name="workspaceId" value="@(Model?.CurrentWorkspaceId ?? 1)" />
+        <input type="text" name="search" value="@(Model?.FilterSearch ?? "")" placeholder="🔍 Tìm kiếm task, git tag, thành viên (Ctrl+K)..."
+               class="w-full bg-slate-100 border border-slate-200 rounded-lg px-4 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition" />
+    </form>
+
+    <div class="flex items-center gap-4">
+        <button onclick="typeof openCreateModal === 'function' ? openCreateModal('To-do') : document.getElementById('createTaskModal')?.classList.remove('hidden')"
+                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-sm transition flex items-center gap-1">
+            <span>+</span> Tạo mới
+        </button>
+        <button class="relative p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition" title="Thông báo">
+            🔔
+            @if ((Model?.OverdueCount ?? 0) > 0)
+            {
+                <span class="absolute top-1 right-1 w-2 h-2 bg-rose-500 rounded-full"></span>
+            }
+        </button>
+
+        <!-- Hồ sơ người dùng & Nút Đăng xuất -->
+        <div class="flex items-center gap-3 pl-3 border-l border-slate-200">
+            <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 border border-blue-200 flex items-center justify-center text-xs font-bold">
+                @(string.IsNullOrEmpty(loggedInName) ? "U" : loggedInName.Substring(0, 1).ToUpper())
+            </div>
+            <div class="text-xs leading-tight">
+                <div class="font-bold text-slate-800">@loggedInName</div>
+                <a href="/Auth/Logout" class="text-[10px] text-rose-600 hover:underline font-semibold">
+                    Đăng xuất ➔
+                </a>
+            </div>
+        </div>
+    </div>
+</header>

@@ -1,0 +1,142 @@
+@model TaskManager.Models.GanttViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Lộ trình biểu đồ Gantt";
+
+    var today = DateTime.Now.Date;
+    int todayOffset = (today - Model.TimelineStart.Date).Days;
+}
+
+<main class="p-6 space-y-5 w-full flex-1 overflow-x-auto">
+
+    <!-- 1. Gọi Component Header, Bộ lọc & Cảnh báo -->
+    <partial name="_GanttHeaderAndFilter" model="Model" />
+
+    <!-- 2. Biểu đồ Gantt Split View (WBS & Timeline) -->
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-x-auto w-full">
+        <div class="min-w-[1200px]">
+
+            <!-- Header Bảng Gantt -->
+            <div class="grid grid-cols-12 bg-slate-100 border-b border-slate-200 text-xs font-bold text-slate-700">
+                <div class="col-span-4 p-3.5 border-r border-slate-200 flex justify-between items-center uppercase tracking-wide">
+                    <span>1. CẤU TRÚC PHÂN CẤP CÔNG VIỆC (WBS)</span>
+                    <span id="apiStatusBadge" class="font-mono text-[10px] font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                        Tổng: @Model.TotalTasks tasks
+                    </span>
+                </div>
+                <div class="col-span-8 grid relative" style="grid-template-columns: repeat(@Model.TotalDays, minmax(0, 1fr));">
+                    @for (int d = 0; d < Model.TotalDays; d++)
+                    {
+                        var date = Model.TimelineStart.AddDays(d);
+                        bool isToday = date.Date == today;
+                        <div class="py-2 text-center border-r border-slate-200/60 font-mono text-[10px] @(isToday ? "bg-rose-500 text-white font-extrabold shadow-sm" : "")" title="@date.ToString("dd/MM/yyyy")">
+                            <div>@date.ToString("dd")</div>
+                            <div class="text-[9px] opacity-75">T@(date.Month)</div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Các dòng công việc -->
+            @if (Model.Tasks.Any())
+            {
+                foreach (var task in Model.Tasks)
+                {
+                    bool isCritical = task.IsOverdue || task.Priority == "Urgent" || task.Priority == "High";
+                    string barColor = task.IsOverdue
+                        ? "bg-gradient-to-r from-rose-500 to-rose-600 shadow-rose-200 text-white"
+                        : task.Status switch
+                        {
+                            "Done" => "bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-emerald-200 text-white",
+                            "In Progress" => "bg-gradient-to-r from-blue-500 to-blue-600 shadow-blue-200 text-white",
+                            "Review" => "bg-gradient-to-r from-amber-400 to-amber-500 shadow-amber-200 text-slate-900",
+                            _ => "bg-slate-300 border-slate-400 text-slate-700"
+                        };
+
+                    <div data-critical="@(isCritical ? "true" : "false")"
+                         class="gantt-row grid grid-cols-12 border-b border-slate-100 hover:bg-slate-50 transition group items-stretch min-h-[58px]">
+                        
+                        <!-- Cột trái: WBS -->
+                        <div class="col-span-4 p-3 border-r border-slate-200 flex flex-col justify-center gap-1.5">
+                            <div class="flex justify-between items-start gap-2">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <span class="w-2 h-2 rounded-full @(task.IsOverdue ? "bg-rose-500" : "bg-blue-500") shrink-0"></span>
+                                    <span class="font-mono text-[10px] font-bold px-1.5 py-0.5 bg-slate-100 text-slate-600 rounded shrink-0">#@task.TaskID</span>
+                                    <span class="font-semibold text-xs text-slate-800 truncate @(task.Status == "Done" ? "line-through text-slate-400" : "")">
+                                        @task.Title
+                                    </span>
+                                </div>
+                                <div class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 shrink-0">
+                                    <button onclick="shiftSchedule(@task.TaskID, '@task.StartDate.ToString("yyyy-MM-ddTHH:mm")', '@task.Deadline.ToString("yyyy-MM-ddTHH:mm")', -1)" class="px-1.5 py-0.5 text-[9px] font-mono bg-white border border-slate-300 rounded hover:bg-slate-100">◀ 1d</button>
+                                    <button onclick="shiftSchedule(@task.TaskID, '@task.StartDate.ToString("yyyy-MM-ddTHH:mm")', '@task.Deadline.ToString("yyyy-MM-ddTHH:mm")', 1)" class="px-1.5 py-0.5 text-[9px] font-mono bg-white border border-slate-300 rounded hover:bg-slate-100">1d ▶</button>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center pl-4 text-[11px]">
+                                <span class="text-slate-500">👤 @task.AssigneeName • Hạn: <strong class="@(task.IsOverdue ? "text-rose-600" : "text-slate-700")">@task.Deadline.ToString("dd/MM")</strong></span>
+                                <span class="font-mono font-semibold text-blue-600">@task.ProgressPercent%</span>
+                            </div>
+                        </div>
+
+                        <!-- Cột phải: Thanh tiến độ Gantt -->
+                        <div class="col-span-8 relative flex items-center">
+                            <div class="absolute inset-0 grid pointer-events-none" style="grid-template-columns: repeat(@Model.TotalDays, minmax(0, 1fr));">
+                                @for (int d = 0; d < Model.TotalDays; d++)
+                                {
+                                    bool isToday = d == todayOffset;
+                                    <div class="border-r border-slate-100/60 h-full @(isToday ? "bg-rose-50/40 border-r-2 border-r-rose-400" : "")"></div>
+                                }
+                            </div>
+
+                            <div class="relative w-full grid items-center px-0.5 z-10" style="grid-template-columns: repeat(@Model.TotalDays, minmax(0, 1fr));">
+                                <div onclick="openScheduleModal(@task.TaskID, '@task.Title.Replace("'", "\\'")', '@task.StartDate.ToString("yyyy-MM-ddTHH:mm")', '@task.Deadline.ToString("yyyy-MM-ddTHH:mm")')"
+                                     style="grid-column: @(task.StartOffsetDays + 1) / span @task.DurationDays;"
+                                     class="h-8 rounded-md @barColor px-2.5 flex items-center justify-between text-[11px] shadow-sm cursor-pointer hover:brightness-110 transition-all overflow-hidden"
+                                     title="Click để sửa lịch trình: @task.StartDate.ToString("dd/MM") ➔ @task.Deadline.ToString("dd/MM")">
+                                    <span class="truncate font-semibold">
+                                        @(task.IsOverdue ? "⚠️ TRỄ: " : "")@task.Title (@(task.DurationDays)d)
+                                    </span>
+                                    <span class="font-mono text-[10px] opacity-90 ml-2 shrink-0">@task.ProgressPercent%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="p-10 text-center text-sm font-medium text-slate-500">
+                    Không có công việc nào khớp với bộ lọc hiện tại.
+                </div>
+            }
+
+            <!-- Footer tổng kết WBS theo đúng Wireframe -->
+            <div class="bg-slate-50 px-4 py-2.5 border-t border-slate-200 flex justify-between items-center text-xs text-slate-600 font-medium">
+                <span>Tổng số công việc: <strong>@Model.CompletedTasks / @Model.TotalTasks tasks hoàn thành</strong></span>
+                <span class="font-mono text-[11px] text-slate-400">Thang thời gian: @Model.TimelineStart.ToString("dd/MM/yyyy") ➔ @Model.TimelineEnd.ToString("dd/MM/yyyy")</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Khối chú thích (Legend) -->
+    <div class="bg-white border border-slate-200 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 text-xs font-medium text-slate-600 shadow-2xs">
+        <div class="flex items-center gap-1.5">
+            <span>ℹ️</span> <strong>Chú thích các ký hiệu & Hướng dẫn tương tác:</strong>
+        </div>
+        <div class="flex flex-wrap items-center gap-5">
+            <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 inline-block bg-emerald-500 rounded-sm"></span> Hoàn tất</span>
+            <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 inline-block bg-blue-500 rounded-sm"></span> Đang thực hiện</span>
+            <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 inline-block bg-amber-400 rounded-sm"></span> Chờ duyệt</span>
+            <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 inline-block bg-rose-500 rounded-sm"></span> Quá hạn</span>
+        </div>
+        <div class="text-[11px] font-mono text-slate-400">
+            Click vào thanh Gantt để điều chỉnh StartDate / Deadline.
+        </div>
+    </div>
+</main>
+
+<!-- 4. Gọi Component Modal cập nhật lịch trình -->
+<partial name="_ScheduleModal" />
+
+@section Scripts {
+    <script src="~/js/gantt.js"></script>
+}

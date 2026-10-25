@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TaskWeb</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-blue-100 selection:text-blue-900">
+
+    <div class="flex min-h-screen w-full">
+        <!-- 1 dòng gọi Sidebar dùng chung -->
+        <partial name="_Sidebar" model="Model" />
+
+        <div class="flex-1 flex flex-col min-w-0 w-full">
+            <!-- 1 dòng gọi Topbar dùng chung -->
+            <partial name="_Topbar" model="Model" />
+
+            <!-- Nơi nội dung của từng trang (Home, Kanban, Gantt) tự động đổ vào -->
+            @RenderBody()
+        </div>
+    </div>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

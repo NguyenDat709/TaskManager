@@ -1,0 +1,66 @@
+@model TaskManager.Models.KanbanViewModel
+
+<div id="createModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden flex items-center justify-center z-50 p-4">
+    <div class="bg-white border border-slate-200 rounded-xl p-6 w-full max-w-md shadow-xl">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+            <h3 class="font-bold text-sm text-slate-800 uppercase">TẠO THẺ KANBAN MỚI (P02 / R02)</h3>
+            <button onclick="closeCreateModal()" class="text-slate-400 hover:text-slate-700 text-sm font-bold">✕</button>
+        </div>
+        <form method="post" action="/Kanban/CreateTask" class="space-y-4 text-xs">
+            <input type="hidden" name="workspaceId" value="@Model.CurrentWorkspaceId" />
+            <div>
+                <label class="font-semibold text-slate-700 block mb-1.5">Tiêu đề công việc (1 - 150 ký tự):</label>
+                <input type="text" name="title" required maxlength="150"
+                       class="w-full border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 p-2.5 rounded-lg outline-none transition"
+                       placeholder="Nhập tên Task..." />
+            </div>
+            <div>
+                <label class="font-semibold text-slate-700 block mb-1.5">Mô tả chi tiết:</label>
+                <textarea name="description" rows="2"
+                          class="w-full border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 p-2.5 rounded-lg outline-none transition"
+                          placeholder="Ghi chú nội dung..."></textarea>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1.5">Cột trạng thái:</label>
+                    <select id="modalStatusSelect" name="status" class="w-full border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 p-2.5 rounded-lg bg-white outline-none transition">
+                        <option value="To-do">To-do</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Review">Review</option>
+                        <option value="Done">Done</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1.5">Độ ưu tiên:</label>
+                    <select name="priority" class="w-full border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 p-2.5 rounded-lg bg-white outline-none transition">
+                        <option value="Low">Low</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="High">High</option>
+                        <option value="Urgent">Urgent</option>
+                    </select>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1.5">Người phụ trách:</label>
+                    <select name="assigneeId" class="w-full border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 p-2.5 rounded-lg bg-white outline-none transition">
+                        <option value="">-- Chưa giao --</option>
+                        @foreach (var u in Model.Users)
+                        {
+                            <option value="@u.UserID">@u.FullName</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1.5">Hạn chót (Deadline):</label>
+                    <input type="datetime-local" name="deadline" required
+                           class="w-full border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 p-2.5 rounded-lg outline-none transition" />
+                </div>
+            </div>
+            <div class="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
+                <button type="button" onclick="closeCreateModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg transition">Hủy</button>
+                <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-sm transition">Lưu Task</button>
+            </div>
+        </form>
+    </div>
+</div>
