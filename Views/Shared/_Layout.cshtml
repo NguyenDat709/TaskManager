@@ -21,6 +21,85 @@
         </div>
     </div>
 
+    <!-- KHUNG MODAL CHI TIẾT TASK & CHECKLIST (DÙNG CHUNG ) -->
+    <div id="taskDetailModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div id="taskDetailContent" class="w-full flex justify-center">
+            <!-- Nội dung sẽ tự động load qua AJAX từ PartialView _TaskDetailModalPartial -->
+        </div>
+    </div>
+
+    <script>
+        // 1. Mở Modal Chi tiết Task theo TaskID
+        function openTaskDetailModal(taskId) {
+            fetch(`/TaskDetail/GetDetailPartial/${taskId}`)
+                .then(res => {
+                    if (!res.ok) throw new Error("Không thể tải thông tin công việc!");
+                    return res.text();
+                })
+                .then(html => {
+                    document.getElementById('taskDetailContent').innerHTML = html;
+                    document.getElementById('taskDetailModal').classList.remove('hidden');
+                })
+                .catch(err => {
+                    alert(err.message);
+                });
+        }
+
+        // 2. Đóng Modal Chi tiết Task
+        function closeTaskDetailModal() {
+            document.getElementById('taskDetailModal').classList.add('hidden');
+            document.getElementById('taskDetailContent').innerHTML = '';
+        }
+
+        // 3. Đánh dấu hoàn thành / chưa hoàn thành Checklist
+        function toggleChecklist(checklistId) {
+            fetch(`/TaskDetail/ToggleChecklist?checklistId=${checklistId}`, { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.success) alert("Không thể cập nhật mục kiểm tra!");
+                });
+        }
+
+        // 4. Thêm mục Checklist mới
+        function addChecklist(taskId) {
+            const input = document.getElementById('newChecklistTitle');
+            if (!input) return;
+            const title = input.value.trim();
+            if (!title) return;
+
+            fetch(`/TaskDetail/AddChecklist?taskId=${taskId}&title=${encodeURIComponent(title)}`, { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        openTaskDetailModal(taskId); // Load lại Modal để cập nhật danh sách
+                    }
+                });
+        }
+
+        // 5. Thêm Bình luận mới
+        function addComment(taskId) {
+            const input = document.getElementById('newCommentContent');
+            if (!input) return;
+            const content = input.value.trim();
+            if (!content) return;
+
+            fetch(`/TaskDetail/AddComment?taskId=${taskId}&content=${encodeURIComponent(content)}`, { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        openTaskDetailModal(taskId); // Load lại Modal để hiển thị bình luận mới
+                    }
+                });
+        }
+
+        // Đóng Modal khi nhấn phím ESC
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeTaskDetailModal();
+            }
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

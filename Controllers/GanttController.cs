@@ -22,7 +22,7 @@ namespace TaskManager.Controllers
         public IActionResult Index(int workspaceId = 1, string? status = "All", string? search = null)
         {
             var now = DateTime.Now;
-            // Mặc định hiển thị trục thời gian từ ngày 01 đến hết tháng hiện tại
+            //  hiển thị thời gian từ ngày 01 đến hết tháng hiện tại
             var timelineStart = new DateTime(now.Year, now.Month, 1);
             int daysInMonth = DateTime.DaysInMonth(now.Year, now.Month);
             var timelineEnd = timelineStart.AddDays(daysInMonth - 1);
@@ -65,7 +65,7 @@ namespace TaskManager.Controllers
             }
             catch
             {
-                // Dữ liệu dự phòng nếu chưa có dữ liệu trong SQL Server
+                // data mẫu
                 rawTasks = new List<TaskItem>
                 {
                     new TaskItem { TaskID = 1, Title = "Task 1: Thiết kế giao diện Wireframe", Status = "Done", Priority = "Low", StartDate = timelineStart, Deadline = timelineStart.AddDays(3) },
@@ -137,7 +137,7 @@ namespace TaskManager.Controllers
             return View(vm);
         }
 
-        // API cập nhật StartDate & Deadline xuống CSDL SQL Server
+        // API cập nhật StartDate & Deadline xuống CSDL 
         [HttpPost]
         [Route("UpdateSchedule")]
         public IActionResult UpdateSchedule([FromBody] UpdateTaskScheduleRequest req)
@@ -145,7 +145,7 @@ namespace TaskManager.Controllers
             if (req == null || req.TaskId <= 0)
                 return BadRequest(new { success = false, message = "Dữ liệu công việc không hợp lệ!" });
 
-            // Ràng buộc nghiệp vụ: Hạn chót không được nhỏ hơn Ngày bắt đầu
+            // Hạn chót không được phép nhỏ hơn Ngày bắt đầu
             if (req.Deadline < req.StartDate)
                 return BadRequest(new { success = false, message = "Hạn chót (Deadline) phải lớn hơn hoặc bằng Ngày bắt đầu!" });
 

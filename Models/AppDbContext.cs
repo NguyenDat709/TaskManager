@@ -6,9 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TaskManager.Models
 {
-    // ==========================================
-    // 1. DỰNG LẠI CÁC ENTITY MODEL ĐẦY ĐỦ TRƯỜNG
-    // ==========================================
+   //entity model
 
     [Table("Users")]
     public class User
@@ -176,10 +174,7 @@ namespace TaskManager.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 
-    // ==========================================
-    // 2. VIEW MODEL CHUẨN ĐÃ BỔ SUNG TRƯỜNG & KHÔNG HARDCODE
-    // ==========================================
-
+    //vmodel
     public class HomeDashboardViewModel
     {
         public int CurrentUserId { get; set; }
@@ -201,10 +196,26 @@ namespace TaskManager.Models
         public Dictionary<int, int> SubtaskCounts { get; set; } = new();
     }
 
-    // ==========================================
-    // 3. DBCONTEXT CHUNG CHO TOÀN BỘ DỰ ÁN
-    // ==========================================
+    public class TaskDetailViewModel
+    {
+        public TaskItem Task { get; set; } = new();
+        public Workspace Workspace { get; set; } = new();
+        public User? Assignee { get; set; }
+        public List<User> Members { get; set; } = new();
+        public List<TaskChecklist> Checklists { get; set; } = new();
+        public List<Attachment> Attachments { get; set; } = new();
+        public List<CommentDetailDto> Comments { get; set; } = new();
+    }
 
+    public class CommentDetailDto
+    {
+        public int CommentID { get; set; }
+        public string UserName { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; }
+    }
+
+  // dbcontext
     public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }

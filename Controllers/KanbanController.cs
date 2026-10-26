@@ -33,7 +33,7 @@ namespace TaskManager.Controllers
 
             try
             {
-                // 1. Lấy danh sách Dự án và Người dùng từ SQL Server
+                //  Lấy danh sách Dự án và Người dùng từ SQL 
                 vm.Workspaces = _db.Workspaces.ToList();
                 vm.Users = _db.Users.ToList();
 
@@ -48,13 +48,13 @@ namespace TaskManager.Controllers
 
                 var userDict = vm.Users.ToDictionary(u => u.UserID, u => u.FullName);
 
-                // 2. Lấy toàn bộ Task chính (ParentTaskID == null) thuộc Workspace hiện tại
+                //  Lấy toàn bộ Task cha thuộc Workspace hiện tại
                 var mainTasks = _db.Tasks
                     .Where(t => t.ParentTaskID == null && t.WorkspaceID == vm.CurrentWorkspaceId)
                     .OrderBy(t => t.Deadline)
                     .ToList();
 
-                // Lấy Subtasks để đếm tiến độ checklist trên mỗi thẻ Kanban
+                // Lấy Subtasks để đếm tiến độ checklist trên mỗi thẻ 
                 var subTasks = _db.Tasks
                     .Where(t => t.ParentTaskID != null && t.WorkspaceID == vm.CurrentWorkspaceId)
                     .ToList();
@@ -67,7 +67,6 @@ namespace TaskManager.Controllers
                         TaskID = t.TaskID,
                         Title = t.Title,
                         Description = t.Description,
-                        // Chuẩn hóa tên trạng thái để không bị lệch giữa "To-do" và "To Do"
                         Status = (t.Status == "To Do" || string.IsNullOrEmpty(t.Status)) ? "To-do" : t.Status,
                         Priority = t.Priority,
                         AssigneeID = t.AssigneeID,
@@ -83,7 +82,7 @@ namespace TaskManager.Controllers
             }
             catch
             {
-                // Dữ liệu dự phòng nếu chưa kết nối CSDL
+                // data mẫu
                 taskDtos = new List<TaskItemDto>
                 {
                     new TaskItemDto { TaskID = 1, Title = "Task 1: Thiết kế giao diện Wireframe", Status = "Done", Priority = "Low", AssigneeName = "Phạm Minh", Deadline = DateTime.Now.AddDays(-5), SubtaskCount = 0 },
@@ -93,7 +92,7 @@ namespace TaskManager.Controllers
                 };
             }
 
-            // 3. Áp dụng bộ lọc Tìm kiếm, Người thực hiện, Độ ưu tiên
+            // lọc
             var query = taskDtos.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(search))
@@ -114,7 +113,7 @@ namespace TaskManager.Controllers
 
             var filteredTasks = query.ToList();
 
-            // 4. Đếm số lượng trễ hạn và chia vào 4 cột Kanban
+            // 4 cột trạng thái của task
             vm.OverdueCount = filteredTasks.Count(t => t.Deadline < DateTime.Now && t.Status != "Done");
             vm.TodoTasks = filteredTasks.Where(t => t.Status == "To-do").ToList();
             vm.InProgressTasks = filteredTasks.Where(t => t.Status == "In Progress").ToList();
@@ -124,7 +123,7 @@ namespace TaskManager.Controllers
             return View(vm);
         }
 
-        // API cập nhật trạng thái khi KÉO THẢ thẻ Kanban
+        // API cập nhật trạng thái khi kéo thả thẻ 
         [HttpPost]
         [Route("UpdateStatus")]
         public IActionResult UpdateStatus([FromBody] UpdateTaskStatusRequest req)

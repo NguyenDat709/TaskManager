@@ -674,6 +674,17 @@ D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\refint\TaskManager.dll
 D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\TaskManager.pdb
 D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\TaskManager.genruntimeconfig.cache
 D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\ref\TaskManager.dll
+D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\TaskManager.csproj.AssemblyReference.cache
+D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\rpswa.dswa.cache.json
+D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\TaskManager.GeneratedMSBuildEditorConfig.editorconfig
+D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\TaskManager.AssemblyInfoInputs.cache
+D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\TaskManager.AssemblyInfo.cs
+D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\TaskManager.csproj.CoreCompileInputs.cache
+D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\TaskManager.MvcApplicationPartsAssemblyInfo.cs
+D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\TaskManager.MvcApplicationPartsAssemblyInfo.cache
+D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\TaskManager.RazorAssemblyInfo.cache
+D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\TaskManager.RazorAssemblyInfo.cs
+D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\TaskManager.sourcelink.json
 D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\bin\Debug\net9.0\nuget.config
 D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\bin\Debug\net9.0\appsettings.Development.json
 D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\bin\Debug\net9.0\appsettings.json
@@ -919,17 +930,6 @@ D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\bin\Debug\net9.0\runtimes\win-arm64\n
 D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\bin\Debug\net9.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\bin\Debug\net9.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
 D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
-D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\TaskManager.csproj.AssemblyReference.cache
-D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\rpswa.dswa.cache.json
-D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\TaskManager.GeneratedMSBuildEditorConfig.editorconfig
-D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\TaskManager.AssemblyInfoInputs.cache
-D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\TaskManager.AssemblyInfo.cs
-D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\TaskManager.csproj.CoreCompileInputs.cache
-D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\TaskManager.MvcApplicationPartsAssemblyInfo.cs
-D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\TaskManager.MvcApplicationPartsAssemblyInfo.cache
-D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\TaskManager.RazorAssemblyInfo.cache
-D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\TaskManager.RazorAssemblyInfo.cs
-D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\TaskManager.sourcelink.json
 D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\rjimswa.dswa.cache.json
 D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
 D:\HOCTRENLOP\LẬP TRÌNH WEB\TaskManager\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json

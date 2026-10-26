@@ -13,13 +13,13 @@
 }
 
 <main class="p-6 space-y-5 w-full flex-1 overflow-x-auto">
-    <!-- 1. Gọi Component Header Dự án -->
+    <!--  Gọi Component Header Dự án -->
     <partial name="_ProjectHeader" model="Model" />
 
-    <!-- 2. Gọi Component Bộ lọc đa tiêu chí -->
+    <!-- Gọi Component Bộ lọc đa tiêu chí -->
     <partial name="_FilterBar" model="Model" />
 
-    <!-- 3. Bốn cột Kanban -->
+    <!-- Bốn cột Kanban -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 items-stretch w-full">
         @foreach (var col in columns)
         {

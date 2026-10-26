@@ -3,30 +3,29 @@ using TaskManager.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Lấy chuỗi kết nối CSDL SQL Server từ appsettings.json
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// 1. Đăng ký CSDL AppDbContext duy nhất
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-// 2. Đăng ký Controllers, Views và Session
+//  đk controller, session, view
 builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromHours(2); // Thời gian sống của Session
+    options.IdleTimeout = TimeSpan.FromHours(2);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
 
-// 3. Đăng ký Swagger (cho API)
+//đk swager
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Bật Swagger UI
+
 app.UseSwagger();
 app.UseSwaggerUI();
 

@@ -14,9 +14,10 @@
      draggable="true"
      data-title="@Model.Title"
      data-overdue="@(isOverdue ? "true" : "false")"
-     ondragstart="dragStart(event, @Model.TaskID)"
-     class="task-card bg-white p-4 rounded-lg border transition cursor-grab active:cursor-grabbing shadow-sm hover:shadow-md @(isOverdue ? "border-rose-300 ring-1 ring-rose-200/50" : "border-slate-200 hover:border-blue-400")">
-    
+     ondragstart="isCardDragging = true; dragStart(event, @Model.TaskID)"
+     onclick="openTaskDetailModal(@Model.TaskID)"
+     class="task-card bg-white p-4 rounded-lg border transition cursor-pointer shadow-sm hover:shadow-md @(isOverdue ? "border-rose-300 ring-1 ring-rose-200/50" : "border-slate-200 hover:border-blue-400")">
+
     <div class="flex items-center justify-between gap-2 mb-2">
         <span class="font-mono text-[11px] font-bold px-2 py-0.5 rounded @(isOverdue ? "bg-rose-600 text-white" : "bg-blue-50 text-blue-700 border border-blue-200")">
             PRJ-TASK-@Model.TaskID

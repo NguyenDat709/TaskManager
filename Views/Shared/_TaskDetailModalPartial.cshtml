@@ -1,0 +1,183 @@
+﻿@model TaskManager.Models.TaskDetailViewModel
+@{
+    List<string> taskLabels = ViewBag.TaskLabels as List<string> ?? new List<string>();
+}
+
+<div class="bg-white rounded-xl shadow-2xl w-full max-w-5xl overflow-hidden flex flex-col max-h-[90vh]">
+
+    <!-- HEADER: TIÊU ĐỀ TASK & DỰ ÁN & CÁC NÚT THAO TÁC / ĐÓNG -->
+    <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-3">
+            <span class="px-2.5 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded">📁 @Model.Workspace.WorkspaceName</span>
+            <h2 class="text-base font-bold text-slate-800">#@Model.Task.TaskID - @Model.Task.Title</h2>
+        </div>
+        <div class="flex items-center gap-2">
+            <button class="px-3 py-1.5 text-xs font-semibold bg-slate-200 hover:bg-slate-300 rounded transition">Share</button>
+            <button class="px-3 py-1.5 text-xs font-semibold bg-slate-200 hover:bg-slate-300 rounded transition">Thao tác</button>
+            <button onclick="closeTaskDetailModal()" class="p-1.5 text-slate-400 hover:text-slate-600 font-bold text-lg">✕</button>
+        </div>
+    </div>
+
+    <!-- BODY CHÍNH CÓ 2 CỘT -->
+    <div class="p-6 overflow-y-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- CỘT TRÁI : THÔNG TIN CHÍNH -->
+        <div class="lg:col-span-2 space-y-6">
+
+            <!--  TRẠNG THÁI VÒNG ĐỜI & CHECKLIST -->
+            <div class="p-4 bg-amber-50 border border-amber-200 rounded-xl space-y-2">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-amber-800">TRẠNG THÁI VÒNG ĐỜI: <span class="uppercase">@Model.Task.Status</span></span>
+                    @{
+                        int totalCk = Model.Checklists.Count;
+                        int doneCk = Model.Checklists.Count(c => c.IsCompleted);
+                    }
+                    <span class="text-xs font-semibold text-amber-700">Tiến độ Checklist: @doneCk/@totalCk</span>
+                </div>
+                @if (totalCk > 0 && doneCk < totalCk && Model.Task.Status == "Review")
+                {
+                    <p class="text-[11px] text-rose-600 font-semibold">⚠️ Cảnh báo: Vẫn còn mục checklist chưa hoàn thành trước khi chuyển sang Done!</p>
+                }
+            </div>
+
+            <!--  MÔ TẢ CHI TIẾT -->
+            <div class="space-y-2">
+                <h3 class="text-xs font-bold text-slate-700 uppercase">Mô tả chi tiết & Đặc tả kỹ thuật</h3>
+                <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 min-h-[80px]">
+                    @(string.IsNullOrWhiteSpace(Model.Task.Description) ? "Chưa có mô tả chi tiết cho công việc này." : Model.Task.Description)
+                </div>
+            </div>
+
+            <!-- CHECKLIST-->
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-bold text-slate-700 uppercase">Danh sách kiểm tra (Checklist)</h3>
+                    <span class="text-xs font-semibold text-slate-500" id="checklistProgressText">@doneCk/@totalCk mục</span>
+                </div>
+                <div class="space-y-2" id="checklistContainer">
+                    @foreach (var ck in Model.Checklists)
+                    {
+                        <div class="flex items-center gap-2 p-2 rounded hover:bg-slate-50 border border-slate-100">
+                            <input type="checkbox" onchange="toggleChecklist(@ck.ChecklistID)" @(ck.IsCompleted ? "checked" : "") class="rounded text-blue-600 cursor-pointer" />
+                            <span class="text-xs text-slate-700 @(ck.IsCompleted ? "line-through text-slate-400" : "")">@ck.Title</span>
+                        </div>
+                    }
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" id="newChecklistTitle" placeholder="Thêm mục checklist mới..." class="flex-1 bg-slate-50 border border-slate-200 rounded px-3 py-1.5 text-xs focus:outline-none focus:border-blue-500" />
+                    <button onclick="addChecklist(@Model.Task.TaskID)" class="px-3 py-1.5 bg-blue-600 text-white rounded text-xs font-semibold hover:bg-blue-700 transition">Thêm</button>
+                </div>
+            </div>
+
+            <!-- TỆP ĐÍNH KÈM  -->
+            <div class="space-y-3">
+                <h3 class="text-xs font-bold text-slate-700 uppercase">Tệp đính kèm (Attachments)</h3>
+
+                <div class="border-2 border-dashed border-slate-200 hover:border-blue-400 transition rounded-xl p-4 text-center bg-slate-50/50">
+                    <input type="file" id="attachmentFileInput" class="hidden" onchange="uploadTaskAttachment(@Model.Task.TaskID)" />
+                    <label for="attachmentFileInput" class="cursor-pointer text-xs text-slate-500 hover:text-blue-600 block">
+                        📁 Kéo thả tệp vào đây hoặc <span class="text-blue-600 font-bold underline">Bấm để chọn tệp từ máy tính</span>
+                    </label>
+                </div>
+
+                <div class="space-y-1.5">
+                    @foreach (var att in Model.Attachments)
+                    {
+                        <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-lg border border-slate-200 text-xs">
+                            <a href="@att.FileURL" target="_blank" class="font-semibold text-blue-600 hover:underline truncate max-w-[250px]">
+                                📎 @att.OriginalFileName
+                            </a>
+                            <span class="text-[10px] text-slate-400 font-mono">@((att.FileSize / 1024).ToString("N0")) KB</span>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- CMT -->
+            <div class="space-y-3 pt-4 border-t border-slate-100">
+                <h3 class="text-xs font-bold text-slate-700 uppercase">Bình luận & Thảo luận</h3>
+                <div class="flex gap-2">
+                    <input type="text" id="newCommentContent" placeholder="Nhập bình luận, dùng @@mention..." class="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500" />
+                    <button onclick="addComment(@Model.Task.TaskID)" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition">Gửi</button>
+                </div>
+                <div class="space-y-3" id="commentList">
+                    @foreach (var cm in Model.Comments)
+                    {
+                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 space-y-1">
+                            <div class="flex justify-between items-center text-[11px]">
+                                <span class="font-bold text-slate-800">@cm.UserName</span>
+                                <span class="text-slate-400">@cm.CreatedAt.ToString("HH:mm dd/MM/yyyy")</span>
+                            </div>
+                            <p class="text-xs text-slate-600">@cm.Content</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+
+        <!-- CỘT PHẢI CÁC TRƯỜNG THÔNG TIN PHỤ & THAO TÁC -->
+        <div class="space-y-4 border-l border-slate-100 pl-6">
+
+     
+            <div class="space-y-1">
+                <label class="block text-[11px] font-bold text-slate-400 uppercase">Người phụ trách (Assignee)</label>
+                <select class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs font-semibold text-slate-700 focus:outline-none focus:border-blue-500">
+                    <option value="">--(Chưa giao)--</option>
+                    @foreach (var mem in Model.Members)
+                    {
+                        <option value="@mem.UserID" selected="@(Model.Task.AssigneeID == mem.UserID)">@mem.FullName</option>
+                    }
+                </select>
+            </div>
+
+            <!-- ĐỘ ƯU TIÊN -->
+            <div class="space-y-1">
+                <label class="block text-[11px] font-bold text-slate-400 uppercase">Độ ưu tiên (Priority)</label>
+                <select class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs font-semibold text-slate-700 focus:outline-none focus:border-blue-500">
+                    <option value="Low" selected="@(Model.Task.Priority == "Low")">🟢 Low</option>
+                    <option value="Medium" selected="@(Model.Task.Priority == "Medium")">🟡 Medium</option>
+                    <option value="High" selected="@(Model.Task.Priority == "High")">🟠 High</option>
+                    <option value="Urgent" selected="@(Model.Task.Priority == "Urgent")">🔴 Urgent</option>
+                </select>
+            </div>
+
+            <!--  NHÃN DÁN  -->
+            <div class="space-y-2">
+                <label class="block text-[11px] font-bold text-slate-400 uppercase">Nhãn dán (Labels)</label>
+                <div class="flex flex-wrap gap-1.5 items-center">
+                    @foreach (var lbl in taskLabels)
+                    {
+                        <span class="px-2.5 py-1 bg-blue-100 text-blue-700 rounded-md text-[11px] font-bold">@lbl</span>
+                    }
+
+                    <div class="flex items-center gap-1">
+                        <input type="text" id="newLabelInput" placeholder="Tên nhãn..." class="w-20 bg-slate-50 border border-slate-200 rounded px-2 py-0.5 text-[11px] focus:outline-none focus:w-28 transition-all" />
+                        <button onclick="addNewLabel(@Model.Task.TaskID)" class="px-2 py-0.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded text-[11px] font-bold transition">+ Thêm</button>
+                    </div>
+                </div>
+            </div>
+
+            <!--  MỐC THỜI GIAN & HẠN CHÓT -->
+            <div class="space-y-2 pt-2 border-t border-slate-100">
+                <label class="block text-[11px] font-bold text-slate-400 uppercase">Mốc thời gian & Hạn chót</label>
+                <div>
+                    <span class="text-[10px] text-slate-400 block">Ngày bắt đầu</span>
+                    <input type="datetime-local" value="@Model.Task.StartDate.ToString("yyyy-MM-ddTHH:mm")" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 text-xs" />
+                </div>
+                <div>
+                    <span class="text-[10px] text-slate-400 block">Hạn chót (Deadline)</span>
+                    <input type="datetime-local" value="@Model.Task.Deadline.ToString("yyyy-MM-ddTHH:mm")" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 text-xs" />
+                </div>
+            </div>
+
+            <!--  CÁC NÚT LƯU / ĐÓNG -->
+            <div class="pt-6 space-y-2">
+                <button onclick="closeTaskDetailModal()" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-xs transition">Lưu thay đổi</button>
+                <button onclick="closeTaskDetailModal()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-lg text-xs transition">Đóng</button>
+            </div>
+
+        </div>
+
+    </div>
+</div>

@@ -118,7 +118,7 @@ namespace TaskManager.Controllers
                     return View("Login", model);
                 }
 
-                // 1. Lưu User mới xuống SQL Server
+                // Lưu User mới vào SQL 
                 var newUser = new User
                 {
                     FullName = model.FullName.Trim(),
@@ -129,7 +129,7 @@ namespace TaskManager.Controllers
                 _db.Users.Add(newUser);
                 _db.SaveChanges();
 
-                // 2. Tự động gán User vào Dự án đầu tiên để trải nghiệm ngay
+                // Tự động gán User vào Dự án đầu tiên 
                 var defaultWs = _db.Workspaces.FirstOrDefault();
                 if (defaultWs != null)
                 {

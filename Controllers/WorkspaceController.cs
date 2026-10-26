@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using TaskManager.Models;
@@ -15,7 +16,7 @@ namespace TaskManager.Controllers
             _context = context;
         }
 
-        // Hàm hỗ trợ lấy UserID an toàn từ Session hoặc Cookie
+        // Hàm lấy iduser từ session 
         private int? GetCurrentUserId()
         {
             int? userId = HttpContext.Session.GetInt32("UserID");
@@ -31,7 +32,8 @@ namespace TaskManager.Controllers
             return userId;
         }
 
-        // 1. TRANG CHỦ DASHBOARD
+        // trang chủ
+
         [HttpGet]
         [Route("")]
         [Route("Index")]
@@ -83,10 +85,14 @@ namespace TaskManager.Controllers
                 return NotFound("Không tìm thấy dự án hoặc bạn không có quyền truy cập.");
             }
 
+            // lưu role của user hiện tại lưu vào viewbag
+            ViewBag.UserRole = activeWorkspaceInfo.Role;
+            ViewBag.InviteCode = activeWorkspaceInfo.Workspace.InviteCode;
+
             var tasks = _context.Tasks.Where(t => t.WorkspaceID == activeWorkspaceId).OrderByDescending(t => t.TaskID).ToList();
             DateTime now = DateTime.Now;
 
-            // ĐÓNG GÓI DỮ LIỆU VÀO VIEWMODEL
+            // đóng gói dl vào vmodel
             var viewModel = new HomeDashboardViewModel
             {
                 CurrentUserId = currentUserId.Value,
@@ -103,10 +109,10 @@ namespace TaskManager.Controllers
                 UpcomingAndOtherTasks = tasks.Where(t => (t.Deadline > now.AddHours(24) && t.Status != "Done") || t.Status == "Done").ToList()
             };
 
-            return View(viewModel); // TRUYỀN VIEWMODEL VÀO VIEW
+            return View(viewModel);
         }
 
-        // 2. ACTION AJAX: TRẢ VỀ PARTIAL VIEW ĐỔI CHẾ ĐỘ XEM
+        //  ajax trả về patial view để đổi chế độ xem
         [HttpGet]
         [Route("GetViewModePartial")]
         public IActionResult GetViewModePartial(int workspaceId, string mode)
@@ -121,7 +127,7 @@ namespace TaskManager.Controllers
             return PartialView("_TodoListPartial");
         }
 
-        // 3. TẠO DỰ ÁN MỚI (WORKSPACE)
+        // tạo dự án mới
         [HttpPost]
         [Route("Create")]
         public IActionResult Create(string workspaceName, string description)
@@ -160,7 +166,7 @@ namespace TaskManager.Controllers
             return RedirectToAction("Index", new { workspaceId = workspace.WorkspaceID });
         }
 
-        // 4. TẠO CÔNG VIỆC MỚI (TASK)
+        // tạo task mới
         [HttpPost]
         [Route("CreateTask")]
         public IActionResult CreateTask(int workspaceId, string title, string? description, DateTime? deadline, string priority)
@@ -181,7 +187,7 @@ namespace TaskManager.Controllers
                 Description = description?.Trim(),
                 Deadline = deadline ?? DateTime.Now.AddDays(7),
                 Priority = string.IsNullOrEmpty(priority) ? "Medium" : priority,
-                Status = "To do",
+                Status = "To-do",
                 CreatedAt = DateTime.Now
             };
 
@@ -192,7 +198,7 @@ namespace TaskManager.Controllers
             return RedirectToAction("Index", new { workspaceId });
         }
 
-        // 5. CẬP NHẬT TRẠNG THÁI TASK
+        // cập nhật trạng thái task
         [HttpPost]
         [Route("UpdateTaskStatus")]
         public IActionResult UpdateTaskStatus(int taskId, string status, int workspaceId)
@@ -207,7 +213,7 @@ namespace TaskManager.Controllers
             return RedirectToAction("Index", new { workspaceId });
         }
 
-        // 6. XÓA CÔNG VIỆC (TASK)
+        // xóa task
         [HttpPost]
         [Route("DeleteTask")]
         public IActionResult DeleteTask(int taskId, int workspaceId)
@@ -221,7 +227,7 @@ namespace TaskManager.Controllers
             return RedirectToAction("Index", new { workspaceId });
         }
 
-        // 7. THAM GIA DỰ ÁN BẰNG MÃ MỜI (INVITE CODE)
+        // join dự án = mã mời
         [HttpPost]
         [Route("JoinWorkspace")]
         public IActionResult JoinWorkspace(string inviteCode)
@@ -260,6 +266,170 @@ namespace TaskManager.Controllers
 
             TempData["SuccessMessage"] = $"Gia nhập dự án '{workspace.WorkspaceName}' thành công!";
             return RedirectToAction("Index", new { workspaceId = workspace.WorkspaceID });
+        }
+
+        // mời thành viên qua mail
+        [HttpPost]
+        [Route("InviteMember")]
+        public IActionResult InviteMember(int workspaceId, string email, string role = "Member")
+        {
+            int? currentUserId = GetCurrentUserId();
+            if (currentUserId == null) return Unauthorized();
+
+            var currentMember = _context.WorkspaceMembers.FirstOrDefault(wm => wm.WorkspaceID == workspaceId && wm.UserID == currentUserId.Value);
+            if (currentMember == null || currentMember.Role != "Owner")
+            {
+                return BadRequest(new { success = false, message = "Chỉ Trưởng dự án (Owner) mới có quyền mời và phân quyền thành viên!" });
+            }
+
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return BadRequest(new { success = false, message = "Vui lòng nhập địa chỉ Email!" });
+            }
+
+            string cleanEmail = email.Trim().ToLower();
+
+            var userToInvite = _context.Users.FirstOrDefault(u => u.Email.ToLower() == cleanEmail);
+            if (userToInvite == null)
+            {
+                var workspace = _context.Workspaces.FirstOrDefault(w => w.WorkspaceID == workspaceId);
+                string code = workspace?.InviteCode ?? "";
+                return Ok(new
+                {
+                    success = true,
+                    isNewUser = true,
+                    message = $"Email '{cleanEmail}' chưa có tài khoản trên hệ thống.\n\nBạn hãy gửi Mã mời [{code}] này để người nhận đăng ký và gia nhập dự án nhé!"
+                });
+            }
+
+            bool isAlreadyMember = _context.WorkspaceMembers.Any(wm => wm.WorkspaceID == workspaceId && wm.UserID == userToInvite.UserID);
+            if (isAlreadyMember)
+            {
+                return BadRequest(new { success = false, message = "Thành viên này đã tham gia vào dự án này rồi!" });
+            }
+
+            string assignedRole = (role == "Viewer") ? "Viewer" : "Member";
+
+            var newMember = new WorkspaceMember
+            {
+                WorkspaceID = workspaceId,
+                UserID = userToInvite.UserID,
+                Role = assignedRole,
+                JoinedAt = DateTime.Now
+            };
+
+            _context.WorkspaceMembers.Add(newMember);
+            _context.SaveChanges();
+
+            return Ok(new
+            {
+                success = true,
+                isNewUser = false,
+                message = $"Đã thêm thành công {userToInvite.FullName} vào dự án với vai trò {assignedRole}!"
+            });
+        }
+
+        // thay đổi vai trò tv
+        [HttpPost]
+        [Route("UpdateMemberRole")]
+        public IActionResult UpdateMemberRole(int workspaceId, int targetUserId, string newRole)
+        {
+            int? currentUserId = GetCurrentUserId();
+            if (currentUserId == null) return Unauthorized();
+
+            var currentMember = _context.WorkspaceMembers.FirstOrDefault(wm => wm.WorkspaceID == workspaceId && wm.UserID == currentUserId.Value);
+            if (currentMember == null || currentMember.Role != "Owner")
+            {
+                return BadRequest(new { success = false, message = "Bạn không có quyền thay đổi vai trò thành viên!" });
+            }
+
+            var targetMember = _context.WorkspaceMembers.FirstOrDefault(wm => wm.WorkspaceID == workspaceId && wm.UserID == targetUserId);
+            if (targetMember != null)
+            {
+                if (targetMember.Role == "Owner")
+                {
+                    return BadRequest(new { success = false, message = "Không thể thay đổi vai trò của Chủ dự án!" });
+                }
+
+                targetMember.Role = (newRole == "Viewer") ? "Viewer" : "Member";
+                _context.SaveChanges();
+                return Ok(new { success = true });
+            }
+
+            return NotFound();
+        }
+
+        // xóa tv
+        [HttpPost]
+        [Route("RemoveMember")]
+        public IActionResult RemoveMember(int workspaceId, int targetUserId)
+        {
+            int? currentUserId = GetCurrentUserId();
+            if (currentUserId == null) return Unauthorized();
+
+            var currentMember = _context.WorkspaceMembers.FirstOrDefault(wm => wm.WorkspaceID == workspaceId && wm.UserID == currentUserId.Value);
+            if (currentMember == null || currentMember.Role != "Owner")
+            {
+                return BadRequest(new { success = false, message = "Chỉ Trưởng dự án mới có quyền xóa thành viên!" });
+            }
+
+            var targetMember = _context.WorkspaceMembers.FirstOrDefault(wm => wm.WorkspaceID == workspaceId && wm.UserID == targetUserId);
+            if (targetMember != null)
+            {
+                if (targetMember.Role == "Owner")
+                {
+                    return BadRequest(new { success = false, message = "Không thể xóa Trưởng dự án khỏi Workspace!" });
+                }
+
+                _context.WorkspaceMembers.Remove(targetMember);
+                _context.SaveChanges();
+                return Ok(new { success = true });
+            }
+
+            return NotFound();
+        }
+
+        // xóa dự án
+        [HttpPost]
+        [Route("Delete")]
+        public IActionResult Delete(int workspaceId)
+        {
+            int? currentUserId = GetCurrentUserId();
+            if (currentUserId == null) return Unauthorized();
+
+            var workspace = _context.Workspaces.FirstOrDefault(w => w.WorkspaceID == workspaceId);
+            if (workspace == null)
+            {
+                return NotFound("Không tìm thấy dự án!");
+            }
+
+            if (workspace.OwnerID != currentUserId.Value)
+            {
+                TempData["ErrorMessage"] = "Chỉ Trưởng dự án mới có quyền xóa dự án này!";
+                return RedirectToAction("Index", new { workspaceId });
+            }
+
+            // Xóa các dữ liệu phụ thuộc trong DB
+            var tasks = _context.Tasks.Where(t => t.WorkspaceID == workspaceId).ToList();
+            var taskIds = tasks.Select(t => t.TaskID).ToList();
+
+            var checklists = _context.TaskChecklists.Where(c => taskIds.Contains(c.TaskID)).ToList();
+            var attachments = _context.Attachments.Where(a => taskIds.Contains(a.TaskID)).ToList();
+            var comments = _context.Comments.Where(cm => taskIds.Contains(cm.TaskID)).ToList();
+
+            _context.TaskChecklists.RemoveRange(checklists);
+            _context.Attachments.RemoveRange(attachments);
+            _context.Comments.RemoveRange(comments);
+            _context.Tasks.RemoveRange(tasks);
+
+            var members = _context.WorkspaceMembers.Where(wm => wm.WorkspaceID == workspaceId).ToList();
+            _context.WorkspaceMembers.RemoveRange(members);
+            _context.Workspaces.Remove(workspace);
+
+            _context.SaveChanges();
+
+            TempData["SuccessMessage"] = $"Đã xóa thành công dự án '{workspace.WorkspaceName}'!";
+            return RedirectToAction("Index");
         }
     }
 }
