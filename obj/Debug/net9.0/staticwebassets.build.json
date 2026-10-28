@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "i181XHhcibRnq7slJXWZBQ8Hxm0DbNJUQTmeOwlKmTE=",
+  "Hash": "Ts8EOQtkN+Bq2NmqlxUf8L2FFHdVfwzvGv0HwoFYhmA=",
   "Source": "TaskManager",
   "BasePath": "_content/TaskManager",
   "Mode": "Default",
@@ -605,12 +605,12 @@
       "OriginalItemSpec": "D:\\projectchung\\MVC05\\TaskManager\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css"
     },
     {
-      "Identity": "D:\\projectchung\\MVC05\\TaskManager\\obj\\Debug\\net9.0\\compressed\\fbwjb7envf-6cfz1n2cew.gz",
+      "Identity": "D:\\projectchung\\MVC05\\TaskManager\\obj\\Debug\\net9.0\\compressed\\fbwjb7envf-t7r0vyumwd.gz",
       "SourceId": "TaskManager",
       "SourceType": "Discovered",
       "ContentRoot": "D:\\projectchung\\MVC05\\TaskManager\\obj\\Debug\\net9.0\\compressed\\",
       "BasePath": "_content/TaskManager",
-      "RelativePath": "lib/bootstrap/dist/js/bootstrap.bundle#[.{fingerprint=6cfz1n2cew}]?.js.gz",
+      "RelativePath": "lib/bootstrap/dist/js/bootstrap.bundle#[.{fingerprint=t7r0vyumwd}]?.js.gz",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Alternative",
@@ -619,8 +619,8 @@
       "RelatedAsset": "D:\\projectchung\\MVC05\\TaskManager\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
-      "Fingerprint": "sh9sbpd29q",
-      "Integrity": "8KHWfFCoPlSmLyTbXOoHUNBddvrRpRlyAbs4j5nKGKY=",
+      "Fingerprint": "jtfxjuirz0",
+      "Integrity": "qSZvJcmFAN7WN2MnnK1uofoooyhoCiXfqvxPxEe+aWw=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "D:\\projectchung\\MVC05\\TaskManager\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js"
@@ -2404,8 +2404,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "6cfz1n2cew",
-      "Integrity": "mkoRoV24jV+rCPWcHDR5awPx8VuzzJKN0ibhxZ9/WaM=",
+      "Fingerprint": "t7r0vyumwd",
+      "Integrity": "N89pa+yaaK75+WM1IojiyN62b5eSPWSZi27lSmUQ9vQ=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js"
@@ -14662,174 +14662,13 @@
       ]
     },
     {
-      "Route": "lib/bootstrap/dist/js/bootstrap.bundle.6cfz1n2cew.js",
-      "AssetFile": "D:\\projectchung\\MVC05\\TaskManager\\obj\\Debug\\net9.0\\compressed\\fbwjb7envf-6cfz1n2cew.gz",
-      "Selectors": [
-        {
-          "Name": "Content-Encoding",
-          "Value": "gzip",
-          "Quality": "0.000022545373"
-        }
-      ],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "44354"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"8KHWfFCoPlSmLyTbXOoHUNBddvrRpRlyAbs4j5nKGKY=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Mon, 21 Sep 2026 10:16:42 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        },
-        {
-          "Name": "Content-Encoding",
-          "Value": "gzip"
-        },
-        {
-          "Name": "Vary",
-          "Value": "Content-Encoding"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "W/\"mkoRoV24jV+rCPWcHDR5awPx8VuzzJKN0ibhxZ9/WaM=\""
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "6cfz1n2cew"
-        },
-        {
-          "Name": "label",
-          "Value": "lib/bootstrap/dist/js/bootstrap.bundle.js"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-mkoRoV24jV+rCPWcHDR5awPx8VuzzJKN0ibhxZ9/WaM="
-        }
-      ]
-    },
-    {
-      "Route": "lib/bootstrap/dist/js/bootstrap.bundle.6cfz1n2cew.js",
-      "AssetFile": "D:\\projectchung\\MVC05\\TaskManager\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "207819"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"mkoRoV24jV+rCPWcHDR5awPx8VuzzJKN0ibhxZ9/WaM=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Mon, 21 Sep 2026 10:16:42 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "6cfz1n2cew"
-        },
-        {
-          "Name": "label",
-          "Value": "lib/bootstrap/dist/js/bootstrap.bundle.js"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-mkoRoV24jV+rCPWcHDR5awPx8VuzzJKN0ibhxZ9/WaM="
-        }
-      ]
-    },
-    {
-      "Route": "lib/bootstrap/dist/js/bootstrap.bundle.6cfz1n2cew.js.gz",
-      "AssetFile": "D:\\projectchung\\MVC05\\TaskManager\\obj\\Debug\\net9.0\\compressed\\fbwjb7envf-6cfz1n2cew.gz",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "44354"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"8KHWfFCoPlSmLyTbXOoHUNBddvrRpRlyAbs4j5nKGKY=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Mon, 21 Sep 2026 10:16:42 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        },
-        {
-          "Name": "Content-Encoding",
-          "Value": "gzip"
-        },
-        {
-          "Name": "Vary",
-          "Value": "Content-Encoding"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "6cfz1n2cew"
-        },
-        {
-          "Name": "label",
-          "Value": "lib/bootstrap/dist/js/bootstrap.bundle.js.gz"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-8KHWfFCoPlSmLyTbXOoHUNBddvrRpRlyAbs4j5nKGKY="
-        }
-      ]
-    },
-    {
       "Route": "lib/bootstrap/dist/js/bootstrap.bundle.js",
-      "AssetFile": "D:\\projectchung\\MVC05\\TaskManager\\obj\\Debug\\net9.0\\compressed\\fbwjb7envf-6cfz1n2cew.gz",
+      "AssetFile": "D:\\projectchung\\MVC05\\TaskManager\\obj\\Debug\\net9.0\\compressed\\fbwjb7envf-t7r0vyumwd.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.000022545373"
+          "Quality": "0.000022563686"
         }
       ],
       "ResponseHeaders": [
@@ -14839,15 +14678,15 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "44354"
+          "Value": "44318"
         },
         {
           "Name": "ETag",
-          "Value": "\"8KHWfFCoPlSmLyTbXOoHUNBddvrRpRlyAbs4j5nKGKY=\""
+          "Value": "\"qSZvJcmFAN7WN2MnnK1uofoooyhoCiXfqvxPxEe+aWw=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Mon, 21 Sep 2026 10:16:42 GMT"
+          "Value": "Mon, 26 Oct 2026 09:40:51 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -14867,13 +14706,13 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"mkoRoV24jV+rCPWcHDR5awPx8VuzzJKN0ibhxZ9/WaM=\""
+          "Value": "W/\"N89pa+yaaK75+WM1IojiyN62b5eSPWSZi27lSmUQ9vQ=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-mkoRoV24jV+rCPWcHDR5awPx8VuzzJKN0ibhxZ9/WaM="
+          "Value": "sha256-N89pa+yaaK75+WM1IojiyN62b5eSPWSZi27lSmUQ9vQ="
         }
       ]
     },
@@ -14888,7 +14727,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "207819"
+          "Value": "207726"
         },
         {
           "Name": "Content-Type",
@@ -14896,11 +14735,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"mkoRoV24jV+rCPWcHDR5awPx8VuzzJKN0ibhxZ9/WaM=\""
+          "Value": "\"N89pa+yaaK75+WM1IojiyN62b5eSPWSZi27lSmUQ9vQ=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Mon, 21 Sep 2026 10:16:42 GMT"
+          "Value": "Mon, 26 Oct 2026 09:40:51 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -14910,7 +14749,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-mkoRoV24jV+rCPWcHDR5awPx8VuzzJKN0ibhxZ9/WaM="
+          "Value": "sha256-N89pa+yaaK75+WM1IojiyN62b5eSPWSZi27lSmUQ9vQ="
         }
       ]
     },
@@ -15077,7 +14916,7 @@
     },
     {
       "Route": "lib/bootstrap/dist/js/bootstrap.bundle.js.gz",
-      "AssetFile": "D:\\projectchung\\MVC05\\TaskManager\\obj\\Debug\\net9.0\\compressed\\fbwjb7envf-6cfz1n2cew.gz",
+      "AssetFile": "D:\\projectchung\\MVC05\\TaskManager\\obj\\Debug\\net9.0\\compressed\\fbwjb7envf-t7r0vyumwd.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -15086,7 +14925,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "44354"
+          "Value": "44318"
         },
         {
           "Name": "Content-Type",
@@ -15094,11 +14933,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"8KHWfFCoPlSmLyTbXOoHUNBddvrRpRlyAbs4j5nKGKY=\""
+          "Value": "\"qSZvJcmFAN7WN2MnnK1uofoooyhoCiXfqvxPxEe+aWw=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Mon, 21 Sep 2026 10:16:42 GMT"
+          "Value": "Mon, 26 Oct 2026 09:40:51 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -15116,7 +14955,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-8KHWfFCoPlSmLyTbXOoHUNBddvrRpRlyAbs4j5nKGKY="
+          "Value": "sha256-qSZvJcmFAN7WN2MnnK1uofoooyhoCiXfqvxPxEe+aWw="
         }
       ]
     },
@@ -15850,6 +15689,167 @@
         {
           "Name": "integrity",
           "Value": "sha256-WDZTOK9dQrex7lgPEZZ+JZhLPdAF5GijB8N4Mslft/0="
+        }
+      ]
+    },
+    {
+      "Route": "lib/bootstrap/dist/js/bootstrap.bundle.t7r0vyumwd.js",
+      "AssetFile": "D:\\projectchung\\MVC05\\TaskManager\\obj\\Debug\\net9.0\\compressed\\fbwjb7envf-t7r0vyumwd.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.000022563686"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "44318"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"qSZvJcmFAN7WN2MnnK1uofoooyhoCiXfqvxPxEe+aWw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 26 Oct 2026 09:40:51 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"N89pa+yaaK75+WM1IojiyN62b5eSPWSZi27lSmUQ9vQ=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "t7r0vyumwd"
+        },
+        {
+          "Name": "label",
+          "Value": "lib/bootstrap/dist/js/bootstrap.bundle.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-N89pa+yaaK75+WM1IojiyN62b5eSPWSZi27lSmUQ9vQ="
+        }
+      ]
+    },
+    {
+      "Route": "lib/bootstrap/dist/js/bootstrap.bundle.t7r0vyumwd.js",
+      "AssetFile": "D:\\projectchung\\MVC05\\TaskManager\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "207726"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"N89pa+yaaK75+WM1IojiyN62b5eSPWSZi27lSmUQ9vQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 26 Oct 2026 09:40:51 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "t7r0vyumwd"
+        },
+        {
+          "Name": "label",
+          "Value": "lib/bootstrap/dist/js/bootstrap.bundle.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-N89pa+yaaK75+WM1IojiyN62b5eSPWSZi27lSmUQ9vQ="
+        }
+      ]
+    },
+    {
+      "Route": "lib/bootstrap/dist/js/bootstrap.bundle.t7r0vyumwd.js.gz",
+      "AssetFile": "D:\\projectchung\\MVC05\\TaskManager\\obj\\Debug\\net9.0\\compressed\\fbwjb7envf-t7r0vyumwd.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "44318"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"qSZvJcmFAN7WN2MnnK1uofoooyhoCiXfqvxPxEe+aWw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 26 Oct 2026 09:40:51 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "t7r0vyumwd"
+        },
+        {
+          "Name": "label",
+          "Value": "lib/bootstrap/dist/js/bootstrap.bundle.js.gz"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-qSZvJcmFAN7WN2MnnK1uofoooyhoCiXfqvxPxEe+aWw="
         }
       ]
     },

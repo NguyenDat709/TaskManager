@@ -19,7 +19,6 @@ namespace TaskManager.Models
         public List<TaskItemDto> ReviewTasks { get; set; } = new();
         public List<TaskItemDto> DoneTasks { get; set; } = new();
 
-        // Bộ lọc trên thanh công cụ
         public string? FilterSearch { get; set; }
         public string? FilterAssignee { get; set; }
         public string? FilterPriority { get; set; }

@@ -19,7 +19,6 @@ namespace TaskManager.Controllers
         public IActionResult Index(int workspaceId = 1, string? status = "All", string? search = null)
         {
             var now = DateTime.Now;
-            // Mặc định hiển thị trục thời gian từ ngày 01 đến hết tháng hiện tại
             var timelineStart = new DateTime(now.Year, now.Month, 1);
             int daysInMonth = DateTime.DaysInMonth(now.Year, now.Month);
             var timelineEnd = timelineStart.AddDays(daysInMonth - 1);
@@ -62,7 +61,6 @@ namespace TaskManager.Controllers
             }
             catch
             {
-                // Dữ liệu dự phòng nếu quên bật MySQL
                 rawTasks = new List<TaskItem>
                 {
                     new TaskItem { TaskID = 1, Title = "Task 1: Thiết kế giao diện Wireframe", Status = "Done", Priority = "Low", StartDate = timelineStart, Deadline = timelineStart.AddDays(3) },
@@ -72,7 +70,6 @@ namespace TaskManager.Controllers
                 };
             }
 
-            // Lọc theo từ khóa và trạng thái
             if (!string.IsNullOrWhiteSpace(search))
             {
                 rawTasks = rawTasks.Where(t => t.Title.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
@@ -82,14 +79,12 @@ namespace TaskManager.Controllers
                 rawTasks = rawTasks.Where(t => t.Status == status).ToList();
             }
 
-            // Quy đổi ngày tháng sang tọa độ cột trên biểu đồ Gantt
             foreach (var t in rawTasks)
             {
                 var subs = subTasks.Where(s => s.ParentTaskID == t.TaskID).ToList();
                 int subCount = subs.Count;
                 int doneSubCount = subs.Count(s => s.Status == "Done");
 
-                // Tính % tiến độ dựa trên Subtasks hoặc Status
                 int progress = t.Status switch
                 {
                     "Done" => 100,
@@ -134,14 +129,12 @@ namespace TaskManager.Controllers
             return View(vm);
         }
 
-        // API thật cập nhật StartDate & Deadline xuống MySQL
         [HttpPost]
         public IActionResult UpdateSchedule([FromBody] UpdateTaskScheduleRequest req)
         {
             if (req == null || req.TaskId <= 0)
                 return BadRequest(new { success = false, message = "Dữ liệu công việc không hợp lệ!" });
 
-            // Ràng buộc nghiệp vụ: Hạn chót không được nhỏ hơn Ngày bắt đầu
             if (req.Deadline < req.StartDate)
                 return BadRequest(new { success = false, message = "Hạn chót (Deadline) phải lớn hơn hoặc bằng Ngày bắt đầu!" });
 

@@ -630,7 +630,6 @@ D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\compressed\omdsk6l7q1-37tfw0f
 D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\compressed\ildujx2415-hrwsygsryq.gz
 D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\compressed\l1d6qvsgqp-pk9g2wxc8p.gz
 D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\compressed\o7bg8mrxcq-ft3s53vfgj.gz
-D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\compressed\fbwjb7envf-6cfz1n2cew.gz
 D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\compressed\ujmsxdlu82-6pdc2jztkx.gz
 D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\compressed\uindbytkh5-493y06b0oq.gz
 D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\compressed\qdvze7gfhi-iovd86k7lj.gz
@@ -674,3 +673,5 @@ D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\refint\TaskManager.dll
 D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\TaskManager.pdb
 D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\TaskManager.genruntimeconfig.cache
 D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\ref\TaskManager.dll
+D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\TaskManager.sourcelink.json
+D:\projectchung\MVC05\TaskManager\obj\Debug\net9.0\compressed\fbwjb7envf-t7r0vyumwd.gz

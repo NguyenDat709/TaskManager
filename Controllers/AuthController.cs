@@ -48,14 +48,12 @@ namespace TaskManager.Controllers
                     return View(model);
                 }
 
-                // Kiểm tra mật khẩu (Hỗ trợ cả dữ liệu seed mẫu hoặc mật khẩu vừa đăng ký)
                 if (!string.IsNullOrEmpty(user.PasswordHash) && user.PasswordHash != model.Password)
                 {
                     model.ErrorMessage = "Mật khẩu không chính xác!";
                     return View(model);
                 }
 
-                // Lưu thông tin đăng nhập vào Cookie
                 var cookieOptions = new CookieOptions
                 {
                     Expires = model.RememberMe ? DateTimeOffset.UtcNow.AddDays(7) : DateTimeOffset.UtcNow.AddHours(8),
@@ -109,7 +107,6 @@ namespace TaskManager.Controllers
                     return View("Login", model);
                 }
 
-                // 1. Lưu User mới xuống MySQL
                 var newUser = new User
                 {
                     FullName = model.FullName.Trim(),
@@ -120,7 +117,6 @@ namespace TaskManager.Controllers
                 _db.Users.Add(newUser);
                 _db.SaveChanges();
 
-                // 2. Tự động gán User vào Dự án số 1 để có dữ liệu trải nghiệm ngay
                 var defaultWs = _db.Workspaces.FirstOrDefault();
                 if (defaultWs != null)
                 {

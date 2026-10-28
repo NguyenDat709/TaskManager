@@ -1,6 +1,5 @@
 @model TaskManager.Models.GanttViewModel
 
-<!-- KHỐI 1: HEADER LỘ TRÌNH GANTT -->
 <section class="bg-white border border-slate-200 border-l-4 border-l-blue-600 rounded-xl p-5 shadow-sm flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 w-full">
     <div>
         <h1 class="font-bold text-base text-slate-900 tracking-tight uppercase">
@@ -23,7 +22,6 @@
     </div>
 </section>
 
-<!-- KHỐI 2: BỘ LỌC & CRITICAL PATH -->
 <section class="bg-white border border-slate-200 rounded-xl px-5 py-3 shadow-sm w-full flex flex-wrap items-center justify-between gap-4">
     <form method="get" action="/Gantt" class="flex items-center gap-3">
         <input type="hidden" name="workspaceId" value="@Model.CurrentWorkspaceId" />
@@ -51,7 +49,6 @@
     </div>
 </section>
 
-<!-- KHỐI 3: CẢNH BÁO TIẾN ĐỘ -->
 @if (Model.OverdueTasks > 0)
 {
     <div class="bg-rose-50 border border-rose-200 rounded-xl px-5 py-3 flex items-center justify-between w-full shadow-sm">
